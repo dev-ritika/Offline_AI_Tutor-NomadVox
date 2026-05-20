@@ -14,6 +14,7 @@ class ThemeConfig {
       scaffoldBackgroundColor: ColorConsts.backgroundColor,
       primaryTextTheme: primaryTextTheme,
       textTheme: primaryTextTheme,
+
       appBarTheme: AppBarTheme(
         backgroundColor: ColorConsts.backgroundColor,
         foregroundColor: ColorConsts.textPrimaryColor,
@@ -24,6 +25,7 @@ class ThemeConfig {
           fontWeight: FontWeight.w500,
         ),
       ),
+
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
           shape: WidgetStatePropertyAll(
