@@ -4,7 +4,7 @@ class ColorConsts {
   static const Color primaryColor = Color(0xffA695FF);
   static const Color textPrimaryColor = Color(0xffF0EFF8);
 
-  static const Color backgroundColor = Color(0xff0A0A0F);
+  static const Color backgroundColor = Color(0xff0C0C14);
   static const Color surfaceColor = Color(0xff18181F);
   static const Color accentColor = Color(0xff4FC3A1);
 
@@ -18,8 +18,8 @@ class ColorConsts {
 
   static const Color buttonPLinearColor1 = Color(0xff7C6AFF);
   static const Color buttonPLinearColor2 = Color(0xff9B8BFF);
-  static const Color buttonSecondaryColor = Color(0x107C6AFF);
-  static const Color buttonSecondaryStrokeColor = Color(0x307C6AFF);
+  static const Color buttonSecondaryColor = Color(0x167C6AFF);
+  static const Color buttonSecondaryStrokeColor = Color(0x507C6AFF);
   static const Color buttonMutedColor = Color(0x04ffffff);
   static const Color buttonMutedStrokeColor = Color(0x10ffffff);
   static const Color buttonSuccessColor = Color(0x104FC3A1);

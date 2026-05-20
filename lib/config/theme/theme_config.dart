@@ -89,5 +89,18 @@ class ThemeConfig {
       fontSize: 13,
       fontWeight: FontWeight.w500,
     ),
+
+    headlineSmall: GoogleFonts.dmSans(
+      color: ColorConsts.buttonPLinearColor1,
+      fontSize: 10,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 1.5,
+    ),
+
+    // headlineLarge: GoogleFonts.syne(
+    //   color: ColorConsts.textPrimaryColor,
+    //   fontSize: 30,
+    //   fontWeight: FontWeight.bold,
+    // ),
   );
 }
