@@ -50,9 +50,13 @@ class SelectableContainer extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            if (leadingItem != null) leadingItem!,
+            if (leadingItem != null)
+              Padding(
+                padding: const EdgeInsets.only(right: 30),
+                child: leadingItem!,
+              ),
 
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,6 +73,8 @@ class SelectableContainer extends StatelessWidget {
                 ),
               ],
             ),
+
+            Spacer(),
 
             if (trailingItem != null) trailingItem!,
 

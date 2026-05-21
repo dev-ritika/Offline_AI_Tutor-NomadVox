@@ -1,0 +1,32 @@
+[
+  {
+    "langCode": "fr",
+    "langName": "French",
+    "nativeName": "Français",
+    "speakers": "300M+ speakers"
+  },
+  {
+    "langCode": "de",
+    "langName": "German",
+    "nativeName": "Deutsch",
+    "speakers": "100M+ speakers"
+  },
+  {
+    "langCode": "ja",
+    "langName": "Japanese",
+    "nativeName": "日本語",
+    "speakers": "100M+ speakers"
+  },
+  {
+    "langCode": "es",
+    "langName": "Spanish",
+    "nativeName": "Español",
+    "speakers": "500M+ speakers"
+  },
+  {
+    "langCode": "it",
+    "langName": "Italian",
+    "nativeName": "Italiano",
+    "speakers": "60M+ speakers"
+  }
+]
