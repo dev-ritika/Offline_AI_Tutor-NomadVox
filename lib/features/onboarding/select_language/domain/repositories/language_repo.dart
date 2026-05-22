@@ -1,5 +1,5 @@
-import 'package:offline_ai_tutor/features/onboarding/select_language/domain/entities/language_model.dart';
+import 'package:offline_ai_tutor/features/onboarding/select_language/domain/entities/language.dart';
 
 abstract class LanguageRepo {
-  Future<List<LanguageModel>> getLanguages();
+  Future<List<Language>> getLanguages();
 }

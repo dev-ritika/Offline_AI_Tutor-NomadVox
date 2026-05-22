@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:offline_ai_tutor/features/onboarding/select_language/domain/entities/language_model.dart';
+import 'package:offline_ai_tutor/features/onboarding/select_language/domain/entities/language.dart';
 
 class LanguagesState extends Equatable {
   // final String? langName;
@@ -31,11 +31,11 @@ class LanguagesState extends Equatable {
   //   );
   // }
 
-  final List<LanguageModel>? languagesList;
+  final List<Language>? languagesList;
 
   const LanguagesState({this.languagesList});
 
-  LanguagesState copyWith({List<LanguageModel>? languagesList}) {
+  LanguagesState copyWith({List<Language>? languagesList}) {
     return LanguagesState(languagesList: languagesList ?? this.languagesList);
   }
 

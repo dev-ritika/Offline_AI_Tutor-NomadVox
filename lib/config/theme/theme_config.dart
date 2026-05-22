@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:offline_ai_tutor/core/utils/constants/color_consts.dart';
 
 class ThemeConfig {
+  ThemeConfig._();
+
   static ThemeData appThemeData() {
     return ThemeData(
       useMaterial3: true,

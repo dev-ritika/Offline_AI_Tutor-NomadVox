@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offline_ai_tutor/core/common_widgets/primary_button.dart';
-import 'package:offline_ai_tutor/core/common_widgets/selectable_container.dart';
+import 'package:offline_ai_tutor/core/utils/constants/string_consts.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/common_widgets/onboarding_header.dart';
-import 'package:offline_ai_tutor/features/onboarding/select_language/data/data_sources/language_local_ds.dart';
+import 'package:offline_ai_tutor/features/onboarding/select_language/data/data_sources/language_local_data_source.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/data/repositories/language_repo_impl.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/domain/use_cases/get_user.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/presentation/bloc/bloc/languages_bloc.dart';
@@ -14,13 +15,14 @@ class SelectLanguageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var x = LanguageLocalDS().fetchLanguages();
-    print(x);
-
     return BlocProvider(
       create: (context) => LanguagesBloc(
         getUser: GetUser(
-          languageRepo: LanguageRepoImpl(langDS: LanguageLocalDS()),
+          languageRepo: LanguageRepoImpl(
+            languageDataSource: LanguageLocalDataSourceImpl(
+              rootBundle: rootBundle,
+            ),
+          ),
         ),
       ),
       child: Scaffold(
@@ -30,17 +32,22 @@ class SelectLanguageScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 25),
             child: Column(
               children: [
-                Expanded(
+                const Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      OnboardingHeader(stepNum: 1),
+                      OnboardingHeader(
+                        currentStep: 1,
+                        totalStep: 3,
+                        title: StringConsts.stepTitle,
+                        subtitle: StringConsts.stepSubTitle,
+                      ),
                       LanguagesButtons(),
                     ],
                   ),
                 ),
                 PrimaryButton(
-                  buttonText: "Continue",
+                  buttonText: StringConsts.continueText,
                   onTap: () => print("object"),
                 ),
               ],

@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
 
 class ColorConsts {
+  ColorConsts._();
+
   static const Color primaryColor = Color(0xffA695FF);
   static const Color textPrimaryColor = Color(0xffF0EFF8);
 

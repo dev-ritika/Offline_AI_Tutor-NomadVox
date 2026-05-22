@@ -1,25 +1,21 @@
-import 'package:offline_ai_tutor/features/onboarding/select_language/data/data_model/language_dm.dart';
-import 'package:offline_ai_tutor/features/onboarding/select_language/data/data_sources/language_local_ds.dart';
-import 'package:offline_ai_tutor/features/onboarding/select_language/domain/entities/language_model.dart';
+import 'package:offline_ai_tutor/features/onboarding/select_language/data/data_model/language_model.dart';
+import 'package:offline_ai_tutor/features/onboarding/select_language/data/data_sources/language_local_data_source.dart';
+import 'package:offline_ai_tutor/features/onboarding/select_language/domain/entities/language.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/domain/repositories/language_repo.dart';
 
 class LanguageRepoImpl implements LanguageRepo {
-  final LanguageLocalDS langDS;
+  final LanguageLocalDataSourceImpl languageDataSource;
 
-  LanguageRepoImpl({required this.langDS});
+  LanguageRepoImpl({required this.languageDataSource});
 
   @override
-  Future<List<LanguageModel>> getLanguages() async {
+  Future<List<Language>> getLanguages() async {
     try {
-      final List<LanguageDm> languagesList = await langDS.fetchLanguages();
+      final List<LanguageModel> languagesList = await languageDataSource
+          .fetchLanguages();
 
-      final List<LanguageModel> languages = languagesList.map((e) {
-        return LanguageModel(
-          langCode: e.langCode,
-          langName: e.langName,
-          nativeName: e.nativeName,
-          speakers: e.speakers,
-        );
+      final List<Language> languages = languagesList.map((e) {
+        return e.toDomain();
       }).toList();
 
       return languages;

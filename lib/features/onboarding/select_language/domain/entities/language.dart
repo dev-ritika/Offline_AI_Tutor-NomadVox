@@ -1,10 +1,10 @@
-class LanguageModel {
+class Language {
   final String langName;
   final String nativeName;
   final String langCode;
   final String speakers;
 
-  LanguageModel({
+  Language({
     required this.langCode,
     required this.langName,
     required this.nativeName,

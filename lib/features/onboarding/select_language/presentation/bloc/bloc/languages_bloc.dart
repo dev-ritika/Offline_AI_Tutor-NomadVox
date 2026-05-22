@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:offline_ai_tutor/features/onboarding/select_language/domain/entities/language_model.dart';
+import 'package:offline_ai_tutor/features/onboarding/select_language/domain/entities/language.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/domain/use_cases/get_user.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/presentation/bloc/bloc/languages_event.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/presentation/bloc/bloc/languages_state.dart';
@@ -13,7 +13,7 @@ class LanguagesBloc extends Bloc<LanguagesEvent, LanguagesState> {
 
   void _onLanguagesScreenLoads(LanguagesEvent event, Emitter emit) async {
     try {
-      final List<LanguageModel> languagesList = await getUser();
+      final List<Language> languagesList = await getUser();
 
       emit(
         state.copyWith(

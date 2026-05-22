@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:offline_ai_tutor/core/utils/constants/image_consts.dart';
+import 'package:offline_ai_tutor/core/utils/constants/assets_consts.dart';
 import 'package:offline_ai_tutor/features/splash/presentation/utils/animation/splash_animation.dart';
 
 class SplashLogo extends StatefulWidget {
@@ -41,7 +41,7 @@ class _SplashLogoState extends State<SplashLogo> with TickerProviderStateMixin {
         return FadeTransition(
           opacity: _animationController,
           child: Image.asset(
-            ImageConsts.logoImage,
+            AssetsConsts.logoImage,
             height: _anim.value,
             width: _anim.value,
           ),
