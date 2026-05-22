@@ -12,7 +12,7 @@ class PrimaryButton extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: Ink(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(12)),
           gradient: LinearGradient(
             colors: [
@@ -36,11 +36,11 @@ class PrimaryButton extends StatelessWidget {
 
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
-                    WidgetSpan(
+                    const WidgetSpan(
                       // baseline: TextBaseline.alphabetic,
                       alignment: PlaceholderAlignment.middle,
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 6),
+                        padding: EdgeInsets.only(left: 6),
                         child: Icon(
                           Icons.arrow_forward_ios_outlined,
                           color: ColorConsts.whiteColor,

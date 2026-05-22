@@ -33,7 +33,7 @@ class SelectableContainer extends StatelessWidget {
       height: height,
       width: width ?? double.infinity,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(12)),
+        borderRadius: const BorderRadius.all(Radius.circular(12)),
         border: Border.all(
           style: BorderStyle.solid,
           width: 1.2,
@@ -74,11 +74,11 @@ class SelectableContainer extends StatelessWidget {
               ],
             ),
 
-            Spacer(),
+            const Spacer(),
 
             if (trailingItem != null) trailingItem!,
 
-            if (isSelected) SelectIcon(),
+            if (isSelected) const SelectIcon(),
           ],
         ),
       ),

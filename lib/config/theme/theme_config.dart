@@ -30,15 +30,19 @@ class ThemeConfig {
 
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
-          shape: WidgetStatePropertyAll(
+          shape: const WidgetStatePropertyAll(
             RoundedRectangleBorder(
               borderRadius: BorderRadiusGeometry.all(Radius.circular(10)),
             ),
           ),
 
-          backgroundColor: WidgetStatePropertyAll(ColorConsts.primaryColor),
+          backgroundColor: const WidgetStatePropertyAll(
+            ColorConsts.primaryColor,
+          ),
 
-          foregroundColor: WidgetStatePropertyAll(ColorConsts.textPrimaryColor),
+          foregroundColor: const WidgetStatePropertyAll(
+            ColorConsts.textPrimaryColor,
+          ),
 
           textStyle: WidgetStatePropertyAll(
             GoogleFonts.dmSans(

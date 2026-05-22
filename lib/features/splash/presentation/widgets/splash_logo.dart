@@ -17,7 +17,7 @@ class _SplashLogoState extends State<SplashLogo> with TickerProviderStateMixin {
   void initState() {
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 2),
+      duration: const Duration(seconds: 2),
     );
 
     _anim = SplashAnimation.build(_animationController);

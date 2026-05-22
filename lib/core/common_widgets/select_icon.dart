@@ -22,7 +22,10 @@ class SelectIcon extends StatelessWidget {
           "assets/images/tick.svg",
           width: 11,
           height: 11,
-          color: iconColor ?? ColorConsts.whiteColor,
+          colorFilter: ColorFilter.mode(
+            iconColor ?? ColorConsts.whiteColor,
+            BlendMode.srcIn,
+          ),
         ),
       ),
     );

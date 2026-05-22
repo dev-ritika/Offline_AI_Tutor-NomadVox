@@ -6,8 +6,8 @@ import 'package:offline_ai_tutor/core/utils/constants/string_consts.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/common_widgets/onboarding_header.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/data/data_sources/language_local_data_source.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/data/repositories/language_repo_impl.dart';
-import 'package:offline_ai_tutor/features/onboarding/select_language/domain/use_cases/get_user.dart';
-import 'package:offline_ai_tutor/features/onboarding/select_language/presentation/bloc/bloc/languages_bloc.dart';
+import 'package:offline_ai_tutor/features/onboarding/select_language/domain/use_cases/get_languages.dart';
+import 'package:offline_ai_tutor/features/onboarding/select_language/presentation/bloc/languages_bloc.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/presentation/widgets/languages_buttons.dart';
 
 class SelectLanguageScreen extends StatelessWidget {
@@ -17,8 +17,8 @@ class SelectLanguageScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => LanguagesBloc(
-        getUser: GetUser(
-          languageRepo: LanguageRepoImpl(
+        getLanguages: GetLanguages(
+          languageRepository: LanguageRepoImpl(
             languageDataSource: LanguageLocalDataSourceImpl(
               rootBundle: rootBundle,
             ),
@@ -48,7 +48,7 @@ class SelectLanguageScreen extends StatelessWidget {
                 ),
                 PrimaryButton(
                   buttonText: StringConsts.continueText,
-                  onTap: () => print("object"),
+                  onTap: () => debugPrint("object"),
                 ),
               ],
             ),
