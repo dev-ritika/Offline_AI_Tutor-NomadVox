@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:injectable/injectable.dart';
 import 'package:offline_ai_tutor/core/error_handling/exceptions.dart';
 import 'package:offline_ai_tutor/core/error_handling/failures.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/data/data_model/language_model.dart';
@@ -6,6 +7,7 @@ import 'package:offline_ai_tutor/features/onboarding/select_language/data/data_s
 import 'package:offline_ai_tutor/features/onboarding/select_language/domain/entities/language.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/domain/repositories/language_repo.dart';
 
+@LazySingleton(as: LanguageRepository)
 class LanguageRepoImpl implements LanguageRepository {
   final LanguageLocalDataSourceImpl languageDataSource;
 
@@ -21,6 +23,7 @@ class LanguageRepoImpl implements LanguageRepository {
         return e.toDomain();
       }).toList();
 
+      // return left(AssetFailure("Asset loading failure "));
       return right(languages);
     } on LanguageDataException catch (e) {
       return left(AssetFailure("Asset loading failure $e"));

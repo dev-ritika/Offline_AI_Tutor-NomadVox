@@ -1,45 +1,44 @@
 import 'package:equatable/equatable.dart';
+import 'package:offline_ai_tutor/core/error_handling/failures.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/domain/entities/language.dart';
 
 sealed class LanguagesState extends Equatable {
   const LanguagesState();
 }
 
-class LanguagesLoadedState extends LanguagesState {
-  final List<Language>? languagesList;
+final class LanguagesLoaded extends LanguagesState {
+  final List<Language> languagesList;
 
-  const LanguagesLoadedState({this.languagesList});
+  const LanguagesLoaded({this.languagesList = const []});
 
-  LanguagesLoadedState copyWith({List<Language>? languagesList}) {
-    return LanguagesLoadedState(
-      languagesList: languagesList ?? this.languagesList,
-    );
-  }
+  /// not required
+  /// also this will not allow to clear the values
+  //LanguagesLoadedState copyWith({List<Language>? languagesList}) {
+  //   return LanguagesLoadedState(
+  //     languagesList: languagesList ?? this.languagesList,
+  //   );
+  // }
 
   @override
   List<Object?> get props => [languagesList];
 }
 
-class LanguagesLoadingState extends LanguagesState {
-  const LanguagesLoadingState();
+final class LanguagesLoading extends LanguagesState {
+  const LanguagesLoading();
   @override
   List<Object?> get props => [];
 }
 
-class LanguagesErrorState extends LanguagesState {
-  final String? errorMessage;
-  const LanguagesErrorState({required this.errorMessage});
-
-  LanguagesErrorState copyWith({String? errorMessage}) {
-    return LanguagesErrorState(errorMessage: errorMessage ?? this.errorMessage);
-  }
+final class LanguagesError extends LanguagesState {
+  final Failures? error;
+  const LanguagesError({required this.error});
 
   @override
-  List<Object?> get props => [errorMessage];
+  List<Object?> get props => [error];
 }
 
-class LanguagesEmptyState extends LanguagesState {
-  const LanguagesEmptyState();
+final class LanguagesEmpty extends LanguagesState {
+  const LanguagesEmpty();
   @override
   List<Object?> get props => [];
 }

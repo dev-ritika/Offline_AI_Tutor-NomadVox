@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:injectable/injectable.dart';
 import 'package:offline_ai_tutor/core/error_handling/exceptions.dart';
 import 'package:offline_ai_tutor/core/utils/constants/assets_consts.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/data/data_model/language_model.dart';
@@ -8,6 +9,7 @@ abstract class LanguageLocalDataSource {
   Future<List<LanguageModel>> fetchLanguages();
 }
 
+@singleton
 class LanguageLocalDataSourceImpl implements LanguageLocalDataSource {
   final AssetBundle rootBundle;
 

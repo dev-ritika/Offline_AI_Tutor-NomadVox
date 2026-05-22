@@ -5,48 +5,37 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:offline_ai_tutor/core/common_widgets/selectable_container.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/domain/entities/language.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/presentation/bloc/languages_bloc.dart';
-import 'package:offline_ai_tutor/features/onboarding/select_language/presentation/bloc/languages_event.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/presentation/bloc/languages_state.dart';
 
-class LanguagesButtons extends StatefulWidget {
+class LanguagesButtons extends StatelessWidget {
   const LanguagesButtons({super.key});
 
   @override
-  State<LanguagesButtons> createState() => _LanguagesButtonsState();
-}
-
-class _LanguagesButtonsState extends State<LanguagesButtons> {
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<LanguagesBloc>().add(LanguagesScreenLoads());
-    });
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return BlocListener<LanguagesBloc, LanguagesState>(
-      listener: (context, state) {
-        if (state is LanguagesErrorState) {
-          Fluttertoast.showToast(msg: state.errorMessage ?? "");
-        }
-      },
-      child: BlocSelector<LanguagesBloc, LanguagesState, List<Language>?>(
-        selector: (state) {
-          return switch (state) {
-            LanguagesLoadedState(:final languagesList) => languagesList,
-            _ => null,
-          };
+    return Expanded(
+      child: BlocListener<LanguagesBloc, LanguagesState>(
+        listener: (context, state) {
+          if (state is LanguagesError) {
+            Fluttertoast.showToast(
+              msg: state.error?.message ?? "Error occured",
+            );
+          }
         },
-        builder: (context, languagesList) {
-          return Expanded(
-            child: ListView.builder(
+        child: BlocSelector<LanguagesBloc, LanguagesState, List<Language>?>(
+          selector: (state) {
+            return switch (state) {
+              LanguagesLoaded(:final languagesList) => languagesList,
+              _ => null,
+            };
+          },
+          builder: (context, languagesList) {
+            return ListView.separated(
+              separatorBuilder: (context, index) => const SizedBox(height: 20),
               itemCount: languagesList?.length ?? 0,
               itemBuilder: (context, index) {
                 return SelectableContainer(
                   leadingItem: CountryFlag.fromLanguageCode(
-                    languagesList?[index].langCode ?? "en",
+                    languagesList![index].langCode,
                     theme: const ImageTheme(
                       // shape: Circle(),
                       height: 30,
@@ -56,9 +45,9 @@ class _LanguagesButtonsState extends State<LanguagesButtons> {
                   isSelected: false,
                 );
               },
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
