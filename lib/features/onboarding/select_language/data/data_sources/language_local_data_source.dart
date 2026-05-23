@@ -9,11 +9,15 @@ abstract class LanguageLocalDataSource {
   Future<List<LanguageModel>> fetchLanguages();
 }
 
-@singleton
+@LazySingleton(as: LanguageLocalDataSource)
 class LanguageLocalDataSourceImpl implements LanguageLocalDataSource {
   final AssetBundle rootBundle;
+  final LanguagesParser languagesParser;
 
-  const LanguageLocalDataSourceImpl({required this.rootBundle});
+  const LanguageLocalDataSourceImpl({
+    required this.rootBundle,
+    required this.languagesParser,
+  });
 
   @override
   Future<List<LanguageModel>> fetchLanguages() async {
@@ -22,7 +26,7 @@ class LanguageLocalDataSourceImpl implements LanguageLocalDataSource {
         AssetsConsts.languagesJsonFile,
       );
 
-      List<LanguageModel> languagesList = LanguagesParser().getData(jsonString);
+      List<LanguageModel> languagesList = languagesParser.getData(jsonString);
 
       return languagesList;
     } on FormatException catch (e) {

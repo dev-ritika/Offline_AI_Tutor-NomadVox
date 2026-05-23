@@ -8,3 +8,5 @@ abstract class LanguagesEvent extends Equatable {
 }
 
 class LanguagesScreenLoads extends LanguagesEvent {}
+
+class SelectLanguage extends LanguagesEvent {}

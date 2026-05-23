@@ -10,8 +10,9 @@ class SplashLogo extends StatefulWidget {
 }
 
 class _SplashLogoState extends State<SplashLogo> with TickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _anim;
+  late final AnimationController _animationController;
+  late final Animation<double> _size;
+  late final Animation<double> _opacity;
 
   @override
   void initState() {
@@ -20,7 +21,12 @@ class _SplashLogoState extends State<SplashLogo> with TickerProviderStateMixin {
       duration: const Duration(seconds: 2),
     );
 
-    _anim = SplashAnimation.build(_animationController);
+    _size = SplashAnimation.build(_animationController);
+
+    _opacity = CurvedAnimation(
+      parent: _animationController,
+      curve: const Interval(0, 0.4, curve: Curves.easeIn),
+    );
 
     _animationController.forward();
 
@@ -35,18 +41,18 @@ class _SplashLogoState extends State<SplashLogo> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _anim,
-      builder: (context, child) {
-        return FadeTransition(
-          opacity: _animationController,
-          child: Image.asset(
+    return FadeTransition(
+      opacity: _opacity,
+      child: AnimatedBuilder(
+        animation: _size,
+        builder: (context, child) {
+          return Image.asset(
             AssetsConsts.logoImage,
-            height: _anim.value,
-            width: _anim.value,
-          ),
-        );
-      },
+            height: _size.value,
+            width: _size.value,
+          );
+        },
+      ),
     );
   }
 }

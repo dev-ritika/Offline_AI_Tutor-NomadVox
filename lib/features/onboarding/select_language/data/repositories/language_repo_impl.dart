@@ -9,7 +9,7 @@ import 'package:offline_ai_tutor/features/onboarding/select_language/domain/repo
 
 @LazySingleton(as: LanguageRepository)
 class LanguageRepoImpl implements LanguageRepository {
-  final LanguageLocalDataSourceImpl languageDataSource;
+  final LanguageLocalDataSource languageDataSource;
 
   LanguageRepoImpl({required this.languageDataSource});
 

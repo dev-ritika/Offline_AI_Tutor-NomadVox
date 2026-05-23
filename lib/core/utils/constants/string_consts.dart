@@ -11,7 +11,7 @@ class StringConsts {
   }
 
   static const String stepTitle = "Choose a language";
-  static const String stepSubTitle = "You can add more later";
+  static const String stepSubTitle = "You can change later";
 
   //common
   static const String continueText = "Continue";

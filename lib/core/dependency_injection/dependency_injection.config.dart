@@ -16,6 +16,8 @@ import 'package:offline_ai_tutor/core/dependency_injection/register_module.dart'
     as _i989;
 import 'package:offline_ai_tutor/features/onboarding/select_language/data/data_sources/language_local_data_source.dart'
     as _i156;
+import 'package:offline_ai_tutor/features/onboarding/select_language/data/data_sources/languages_parser.dart'
+    as _i869;
 import 'package:offline_ai_tutor/features/onboarding/select_language/data/repositories/language_repo_impl.dart'
     as _i163;
 import 'package:offline_ai_tutor/features/onboarding/select_language/domain/repositories/language_repo.dart'
@@ -34,17 +36,19 @@ extension GetItInjectableX on _i174.GetIt {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final registerModule = _$RegisterModule();
     gh.lazySingleton<_i281.AssetBundle>(() => registerModule.assetBundle);
-    gh.singleton<_i156.LanguageLocalDataSourceImpl>(
+    gh.lazySingleton<_i869.LanguagesParser>(() => _i869.LanguagesParser());
+    gh.lazySingleton<_i156.LanguageLocalDataSource>(
       () => _i156.LanguageLocalDataSourceImpl(
         rootBundle: gh<_i281.AssetBundle>(),
+        languagesParser: gh<_i869.LanguagesParser>(),
       ),
     );
     gh.lazySingleton<_i518.LanguageRepository>(
       () => _i163.LanguageRepoImpl(
-        languageDataSource: gh<_i156.LanguageLocalDataSourceImpl>(),
+        languageDataSource: gh<_i156.LanguageLocalDataSource>(),
       ),
     );
-    gh.singleton<_i614.GetLanguages>(
+    gh.lazySingleton<_i614.GetLanguages>(
       () => _i614.GetLanguages(
         languageRepository: gh<_i518.LanguageRepository>(),
       ),
