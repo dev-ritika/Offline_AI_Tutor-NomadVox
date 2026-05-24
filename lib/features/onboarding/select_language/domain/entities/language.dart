@@ -30,23 +30,4 @@ class Language extends Equatable {
       speakers: speakers ?? this.speakers,
     );
   }
-
-  bool operator ==(Object object) {
-    if (identical(object, this)) {
-      return true;
-    } else {
-      return object is Language &&
-          this.langCode == object.langCode &&
-          this.langName == object.langName &&
-          this.nativeName == object.nativeName &&
-          this.speakers == object.speakers;
-    }
-  }
-
-  @override
-  int get hashCode =>
-      langCode.hashCode ^
-      langName.hashCode ^
-      nativeName.hashCode ^
-      speakers.hashCode;
 }
