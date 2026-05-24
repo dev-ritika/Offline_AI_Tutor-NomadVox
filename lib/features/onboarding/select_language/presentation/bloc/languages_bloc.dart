@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
+import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:offline_ai_tutor/core/error_handling/failures.dart';
 import 'package:offline_ai_tutor/core/use_case/no_params.dart';
@@ -14,6 +15,20 @@ class LanguagesBloc extends Bloc<LanguagesEvent, LanguagesState> {
 
   LanguagesBloc({required this.getLanguages}) : super(const LanguagesEmpty()) {
     on<LanguagesScreenLoads>(_onLanguagesScreenLoads);
+    on<SelectLanguage>(_selectLanguage);
+  }
+
+  void _selectLanguage(SelectLanguage event, Emitter<LanguagesState> emit) {
+    if (state case final LanguagesLoaded s) {
+      final isToggleOff =
+          s.selectedLanguage?.langCode == event.selectedLanguage?.langCode;
+      emit(
+        s.copyWith(
+          selected: isToggleOff ? null : event.selectedLanguage,
+          clearSelected: isToggleOff,
+        ),
+      );
+    }
   }
 
   Future<void> _onLanguagesScreenLoads(
@@ -25,7 +40,7 @@ class LanguagesBloc extends Bloc<LanguagesEvent, LanguagesState> {
     await Future.delayed(const Duration(seconds: 1));
 
     final Either<Failures, List<Language>> data = await getLanguages(
-      NoParams(),
+      const NoParams(),
     );
 
     data.fold(

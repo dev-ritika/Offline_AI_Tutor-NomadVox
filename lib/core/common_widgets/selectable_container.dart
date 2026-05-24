@@ -10,12 +10,18 @@ class SelectableContainer extends StatelessWidget {
   final bool isSelected;
   final Color? borderColor;
   final Widget? leadingItem;
+  final String language;
+  final String speakers;
 
   final Widget? middleItem;
   final Widget? trailingItem;
+  final VoidCallback onTap;
 
   const SelectableContainer({
     super.key,
+    required this.onTap,
+    required this.language,
+    required this.speakers,
     this.borderColor,
     this.height,
     this.width,
@@ -29,57 +35,60 @@ class SelectableContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: height,
-      width: width ?? double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(12)),
-        border: Border.all(
-          style: BorderStyle.solid,
-          width: 1.2,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: height,
+        width: width ?? double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(12)),
+          border: Border.all(
+            style: BorderStyle.solid,
+            width: 1.2,
 
-          color: borderColor ?? ColorConsts.buttonSecondaryStrokeColor,
+            color: borderColor ?? ColorConsts.buttonSecondaryStrokeColor,
+          ),
+          gradient: LinearGradient(
+            colors: [
+              color1 ?? ColorConsts.buttonSecondaryColor,
+              color2 ?? ColorConsts.buttonSecondaryColor,
+            ],
+          ),
         ),
-        gradient: LinearGradient(
-          colors: [
-            color1 ?? ColorConsts.buttonSecondaryColor,
-            color2 ?? ColorConsts.buttonSecondaryColor,
-          ],
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-        child: Row(
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            if (leadingItem != null)
-              Padding(
-                padding: const EdgeInsets.only(right: 30),
-                child: leadingItem!,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+          child: Row(
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              if (leadingItem != null)
+                Padding(
+                  padding: const EdgeInsets.only(right: 30),
+                  child: leadingItem!,
+                ),
+
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    language,
+                    textAlign: TextAlign.left,
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  Text(
+                    speakers,
+                    textAlign: TextAlign.left,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ],
               ),
 
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "French",
-                  textAlign: TextAlign.left,
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-                Text(
-                  "French wjhf jhwdjk fh",
-                  textAlign: TextAlign.left,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              ],
-            ),
+              const Spacer(),
 
-            const Spacer(),
+              if (trailingItem != null) trailingItem!,
 
-            if (trailingItem != null) trailingItem!,
-
-            if (isSelected) const SelectIcon(),
-          ],
+              if (isSelected) const SelectIcon(),
+            ],
+          ),
         ),
       ),
     );

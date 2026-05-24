@@ -7,20 +7,30 @@ sealed class LanguagesState extends Equatable {
 }
 
 final class LanguagesLoaded extends LanguagesState {
+  final Language? selectedLanguage;
   final List<Language> languagesList;
 
-  const LanguagesLoaded({this.languagesList = const []});
-
-  /// not required
-  /// also this will not allow to clear the values
-  //LanguagesLoadedState copyWith({List<Language>? languagesList}) {
-  //   return LanguagesLoadedState(
-  //     languagesList: languagesList ?? this.languagesList,
-  //   );
-  // }
+  const LanguagesLoaded({this.languagesList = const [], this.selectedLanguage});
 
   @override
-  List<Object?> get props => [languagesList];
+  List<Object?> get props => [languagesList, selectedLanguage];
+
+  bool get hasSelection => selectedLanguage != null;
+
+  bool isSelected(Language l) {
+    return l.langName == selectedLanguage?.langName;
+  }
+
+  LanguagesLoaded copyWith({
+    List<Language>? languagesList,
+    Language? selected,
+    bool clearSelected = false,
+  }) => LanguagesLoaded(
+    languagesList: languagesList ?? this.languagesList,
+    selectedLanguage: clearSelected
+        ? null
+        : (selected ?? this.selectedLanguage),
+  );
 }
 
 final class LanguagesLoading extends LanguagesState {

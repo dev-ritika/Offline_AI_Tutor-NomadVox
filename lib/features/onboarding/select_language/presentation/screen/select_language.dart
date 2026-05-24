@@ -43,9 +43,19 @@ class SelectLanguageScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    PrimaryButton(
-                      buttonText: StringConsts.continueText,
-                      onTap: () => debugPrint("object"),
+                    BlocSelector<LanguagesBloc, LanguagesState, bool>(
+                      selector: (state) {
+                        if (state is LanguagesLoaded) {
+                          return state.hasSelection;
+                        }
+                        return false;
+                      },
+                      builder: (context, isSelected) {
+                        return PrimaryButton(
+                          buttonText: StringConsts.continueText,
+                          onTap: isSelected ? () => debugPrint("object") : null,
+                        );
+                      },
                     ),
                   ],
                 ),

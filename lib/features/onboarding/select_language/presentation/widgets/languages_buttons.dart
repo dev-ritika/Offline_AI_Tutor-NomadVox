@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:offline_ai_tutor/core/common_widgets/selectable_container.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/domain/entities/language.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/presentation/bloc/languages_bloc.dart';
+import 'package:offline_ai_tutor/features/onboarding/select_language/presentation/bloc/languages_event.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/presentation/bloc/languages_state.dart';
 
 class LanguagesButtons extends StatelessWidget {
@@ -21,28 +22,41 @@ class LanguagesButtons extends StatelessWidget {
             );
           }
         },
-        child: BlocSelector<LanguagesBloc, LanguagesState, List<Language>?>(
+        child: BlocSelector<LanguagesBloc, LanguagesState, LanguagesLoaded?>(
           selector: (state) {
             return switch (state) {
-              LanguagesLoaded(:final languagesList) => languagesList,
+              LanguagesLoaded() => state,
               _ => null,
             };
           },
-          builder: (context, languagesList) {
+          builder: (context, languageState) {
             return ListView.separated(
               separatorBuilder: (context, index) => const SizedBox(height: 20),
-              itemCount: languagesList?.length ?? 0,
+              itemCount: languageState?.languagesList.length ?? 0,
               itemBuilder: (context, index) {
                 return SelectableContainer(
+                  onTap: () {
+                    debugPrint("tapped");
+                    context.read<LanguagesBloc>().add(
+                      SelectLanguage(
+                        selectedLanguage: languageState.languagesList[index],
+                      ),
+                    );
+                  },
+                  language: languageState!.languagesList[index].langName,
+                  speakers: languageState.languagesList[index].speakers,
                   leadingItem: CountryFlag.fromLanguageCode(
-                    languagesList![index].langCode,
+                    languageState.languagesList[index].langCode,
                     theme: const ImageTheme(
                       // shape: Circle(),
                       height: 30,
                       width: 40,
                     ),
                   ),
-                  isSelected: false,
+
+                  isSelected: languageState.isSelected(
+                    languageState.languagesList[index],
+                  ),
                 );
               },
             );
