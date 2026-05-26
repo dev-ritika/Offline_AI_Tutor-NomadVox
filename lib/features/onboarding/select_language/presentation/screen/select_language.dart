@@ -4,6 +4,7 @@ import 'package:offline_ai_tutor/core/common_widgets/primary_button.dart';
 import 'package:offline_ai_tutor/core/dependency_injection/dependency_injection.dart';
 import 'package:offline_ai_tutor/core/utils/constants/color_consts.dart';
 import 'package:offline_ai_tutor/core/utils/constants/string_consts.dart';
+import 'package:offline_ai_tutor/core/utils/enums/state_enum.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/common_widgets/onboarding_header.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/presentation/bloc/languages_bloc.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/presentation/bloc/languages_event.dart';
@@ -43,17 +44,20 @@ class SelectLanguageScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    BlocSelector<LanguagesBloc, LanguagesState, bool>(
-                      selector: (state) {
-                        if (state is LanguagesLoaded) {
-                          return state.hasSelection;
-                        }
-                        return false;
-                      },
-                      builder: (context, isSelected) {
+                    BlocSelector<
+                      LanguagesBloc,
+                      LanguagesLoaded,
+                      ({bool hasSelection, StateStatusEnum? status})
+                    >(
+                      selector: (state) => (
+                        hasSelection: state.hasSelection,
+                        status: state.status,
+                      ),
+                      builder: (context, data) {
                         return PrimaryButton(
+                          showLoader: data.status == StateStatusEnum.saving,
                           buttonText: StringConsts.continueText,
-                          onTap: isSelected
+                          onTap: data.hasSelection
                               ? () {
                                   context.read<LanguagesBloc>().add(
                                     SaveSelectedLanguage(),
@@ -69,20 +73,8 @@ class SelectLanguageScreen extends StatelessWidget {
             ),
           ),
 
-          BlocSelector<LanguagesBloc, LanguagesState, bool>(
-            selector: (state) {
-              // return switch(state){
-              //   c => true,
-              //   _ => false
-              // };
-
-              switch (state) {
-                case LanguagesLoading():
-                  return true;
-                default:
-                  return false;
-              }
-            },
+          BlocSelector<LanguagesBloc, LanguagesLoaded, bool>(
+            selector: (state) => state.isLoading ?? false,
             builder: (context, isLoading) => isLoading
                 ? Container(
                     height: double.infinity,

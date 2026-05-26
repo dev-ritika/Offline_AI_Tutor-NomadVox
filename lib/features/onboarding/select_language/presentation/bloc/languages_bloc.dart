@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 import 'package:offline_ai_tutor/core/error_handling/failures.dart';
 import 'package:offline_ai_tutor/core/use_case/no_params.dart';
+import 'package:offline_ai_tutor/core/utils/enums/state_enum.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/domain/entities/language.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/domain/use_cases/get_languages.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/domain/use_cases/save_language.dart';
@@ -10,12 +11,12 @@ import 'package:offline_ai_tutor/features/onboarding/select_language/presentatio
 import 'package:offline_ai_tutor/features/onboarding/select_language/presentation/bloc/languages_state.dart';
 
 @injectable
-class LanguagesBloc extends Bloc<LanguagesEvent, LanguagesState> {
+class LanguagesBloc extends Bloc<LanguagesEvent, LanguagesLoaded> {
   final GetLanguages getLanguages;
   final SaveLanguage saveLanguage;
 
   LanguagesBloc({required this.getLanguages, required this.saveLanguage})
-    : super(const LanguagesEmpty()) {
+    : super(const LanguagesLoaded()) {
     on<LanguagesScreenLoads>(_onLanguagesScreenLoads);
     on<SelectLanguage>(_selectLanguage);
     on<SaveSelectedLanguage>(_saveSelectedLanguage);
@@ -23,50 +24,47 @@ class LanguagesBloc extends Bloc<LanguagesEvent, LanguagesState> {
 
   Future<void> _saveSelectedLanguage(
     SaveSelectedLanguage event,
-    Emitter<LanguagesState> emit,
+    Emitter<LanguagesLoaded> emit,
   ) async {
-    if (state case LanguagesLoaded currentState) {
-      if (currentState.selectedLanguage == null) return;
+    if (state.selectedLanguage == null) return;
 
-      final Either<Failures, void> data = await saveLanguage.call(
-        currentState.selectedLanguage!,
-      );
+    emit(state.copyWith(status: StateStatusEnum.saving));
 
-      data.fold(
-        (l) {
-          print("am i here ${currentState.languagesList}");
-          emit(LanguagesError(error: l));
-          print("am i here 2 ${currentState.languagesList}");
-        },
-        (r) {
-          //later code to add navigation
-          print("success");
-        },
-      );
-      print("am i here 3 ${currentState.languagesList}");
-    }
+    final Either<Failures, void> data = await saveLanguage.call(
+      state.selectedLanguage!,
+    );
+
+    data.fold(
+      (l) {
+        emit(state.copyWith(error: l, status: StateStatusEnum.error));
+      },
+      (r) {
+        //later code to add navigation
+        emit(state.copyWith(status: StateStatusEnum.saved));
+        print("success");
+      },
+    );
   }
 
-  void _selectLanguage(SelectLanguage event, Emitter<LanguagesState> emit) {
-    if (state case final LanguagesLoaded currentState) {
-      bool isAlreadySelected =
-          currentState.selectedLanguage?.langCode ==
-          event.selectedLanguage?.langCode;
+  void _selectLanguage(SelectLanguage event, Emitter<LanguagesLoaded> emit) {
+    bool isAlreadySelected =
+        state.selectedLanguage?.langCode == event.selectedLanguage?.langCode;
 
-      emit(
-        currentState.copyWith(
-          clearSelected: isAlreadySelected,
-          selected: event.selectedLanguage,
-        ),
-      );
-    }
+    emit(
+      state.copyWith(
+        clearError: true,
+        clearSelected: isAlreadySelected,
+        selected: event.selectedLanguage,
+        status: StateStatusEnum.loaded,
+      ),
+    );
   }
 
   Future<void> _onLanguagesScreenLoads(
     LanguagesScreenLoads event,
-    Emitter<LanguagesState> emit,
+    Emitter<LanguagesLoaded> emit,
   ) async {
-    emit(const LanguagesLoading());
+    emit(state.copyWith(status: StateStatusEnum.loading));
 
     await Future.delayed(const Duration(seconds: 1));
 
@@ -76,11 +74,13 @@ class LanguagesBloc extends Bloc<LanguagesEvent, LanguagesState> {
 
     data.fold(
       (l) {
-        emit(LanguagesError(error: l));
+        emit(state.copyWith(error: l, status: StateStatusEnum.error));
       },
       (r) {
-        emit(LanguagesLoaded(languagesList: r));
+        emit(LanguagesLoaded(languagesList: r, status: StateStatusEnum.loaded));
       },
     );
+
+    emit(state.copyWith(status: StateStatusEnum.loaded));
   }
 }

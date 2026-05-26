@@ -6,3 +6,12 @@ class LanguageDataException implements Exception {
   @override
   String toString() => message;
 }
+
+class HiveDataException implements Exception {
+  final String message;
+
+  HiveDataException({required this.message});
+
+  @override
+  String toString() => message;
+}

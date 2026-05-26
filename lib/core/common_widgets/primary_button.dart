@@ -4,8 +4,14 @@ import 'package:offline_ai_tutor/core/utils/constants/color_consts.dart';
 class PrimaryButton extends StatelessWidget {
   final VoidCallback? onTap;
   final String buttonText;
+  final bool showLoader;
 
-  const PrimaryButton({super.key, this.onTap, required this.buttonText});
+  const PrimaryButton({
+    super.key,
+    this.onTap,
+    required this.buttonText,
+    this.showLoader = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -35,29 +41,37 @@ class PrimaryButton extends StatelessWidget {
               width: double.infinity,
               height: 46,
               child: Center(
-                child: Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text: buttonText,
+                child: showLoader
+                    ? const SizedBox(
+                        height: 25,
+                        width: 25,
+                        child: CircularProgressIndicator(
+                          color: ColorConsts.whiteColor,
+                        ),
+                      )
+                    : Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: buttonText,
 
-                        style: Theme.of(context).textTheme.titleSmall,
-                      ),
-                      const WidgetSpan(
-                        // baseline: TextBaseline.alphabetic,
-                        alignment: PlaceholderAlignment.middle,
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 6),
-                          child: Icon(
-                            Icons.arrow_forward_ios_outlined,
-                            color: ColorConsts.whiteColor,
-                            size: 12,
-                          ),
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+                            const WidgetSpan(
+                              // baseline: TextBaseline.alphabetic,
+                              alignment: PlaceholderAlignment.middle,
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 6),
+                                child: Icon(
+                                  Icons.arrow_forward_ios_outlined,
+                                  color: ColorConsts.whiteColor,
+                                  size: 12,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
               ),
             ),
           ),
