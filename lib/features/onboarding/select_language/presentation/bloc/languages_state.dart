@@ -25,12 +25,16 @@ final class LanguagesLoaded extends LanguagesState {
     List<Language>? languagesList,
     Language? selected,
     bool clearSelected = false,
-  }) => LanguagesLoaded(
-    languagesList: languagesList ?? this.languagesList,
-    selectedLanguage: clearSelected
-        ? null
-        : (selected ?? this.selectedLanguage),
-  );
+  }) {
+    var x = LanguagesLoaded(
+      languagesList: languagesList ?? this.languagesList,
+      selectedLanguage: clearSelected
+          ? null
+          : (selected ?? this.selectedLanguage),
+    );
+
+    return x;
+  }
 }
 
 final class LanguagesLoading extends LanguagesState {

@@ -1,9 +1,19 @@
+import 'package:hive/hive.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/domain/entities/language.dart';
+part 'language_model.g.dart';
 
-class LanguageModel {
+@HiveType(typeId: 0)
+class LanguageModel extends HiveObject {
+  @HiveField(0)
   final String langName;
+
+  @HiveField(1)
   final String nativeName;
+
+  @HiveField(2)
   final String langCode;
+
+  @HiveField(3)
   final String speakers;
 
   LanguageModel({
@@ -37,6 +47,15 @@ class LanguageModel {
       langName: langName,
       nativeName: nativeName,
       speakers: speakers,
+    );
+  }
+
+  factory LanguageModel.fromDomain(Language language) {
+    return LanguageModel(
+      langCode: language.langCode,
+      langName: language.langName,
+      nativeName: language.nativeName,
+      speakers: language.speakers,
     );
   }
 }

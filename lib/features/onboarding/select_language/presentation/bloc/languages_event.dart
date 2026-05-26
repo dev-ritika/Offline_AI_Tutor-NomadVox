@@ -18,3 +18,5 @@ class SelectLanguage extends LanguagesEvent {
   @override
   List<Object?> get props => [selectedLanguage];
 }
+
+class SaveSelectedLanguage extends LanguagesEvent {}
