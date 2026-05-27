@@ -29,8 +29,6 @@ class LanguageLocalDataSourceImpl implements LanguageLocalDataSource {
       List<LanguageModel> languagesList = languagesParser.getData(jsonString);
 
       return languagesList;
-    } on FormatException catch (e) {
-      throw LanguageDataException(message: "Invalid format $e");
     } catch (e) {
       throw LanguageDataException(message: "Something went wrong $e");
     }

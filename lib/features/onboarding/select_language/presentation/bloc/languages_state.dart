@@ -41,32 +41,9 @@ final class LanguagesState extends Equatable {
     var x = LanguagesState(
       status: status ?? this.status,
       error: clearError ? null : error ?? this.error,
-
-      // isLoading: isLoading ?? this.isLoading,
       languagesList: languagesList ?? this.languagesList,
       selectedLanguage: clearSelected ? null : (selected ?? selectedLanguage),
     );
-
     return x;
   }
 }
-
-// final class LanguagesLoading extends LanguagesState {
-//   const LanguagesLoading();
-//   @override
-//   List<Object?> get props => [];
-// }
-
-// final class LanguagesError extends LanguagesState {
-//   final Failures? error;
-//   const LanguagesError({required this.error});
-
-//   @override
-//   List<Object?> get props => [error];
-// }
-
-// final class LanguagesEmpty extends LanguagesState {
-//   const LanguagesEmpty();
-//   @override
-//   List<Object?> get props => [];
-// }

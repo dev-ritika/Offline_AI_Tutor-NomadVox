@@ -1,6 +1,7 @@
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive_ce.dart';
 import 'package:injectable/injectable.dart';
 import 'package:offline_ai_tutor/core/error_handling/exceptions.dart';
+import 'package:offline_ai_tutor/core/storage/hive/hive_keys.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/data/data_model/language_model.dart';
 
 abstract interface class SaveLanguageLocallyDataSource {
@@ -10,14 +11,16 @@ abstract interface class SaveLanguageLocallyDataSource {
 @LazySingleton(as: SaveLanguageLocallyDataSource)
 class SaveLanguageLocallyDataSourceImpl
     implements SaveLanguageLocallyDataSource {
+  final Box<LanguageModel> userPrefBox;
+
+  SaveLanguageLocallyDataSourceImpl(@Named("userPrefs") this.userPrefBox);
+
   @override
   Future<void> saveLanguage(LanguageModel selectedLanguage) async {
     try {
-      final Box<LanguageModel> box = Hive.box<LanguageModel>("user_language");
+      await userPrefBox.put(HiveKeys.selectedLanguageKey, selectedLanguage);
 
-      await box.put("selected_language", selectedLanguage);
-
-      final LanguageModel? data = box.get("selected_language");
+      final LanguageModel? data = userPrefBox.get(HiveKeys.selectedLanguageKey);
 
       print(data?.langName);
     } catch (e) {

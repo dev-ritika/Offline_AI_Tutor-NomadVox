@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:offline_ai_tutor/config/routes/routes_names.dart';
 import 'package:offline_ai_tutor/features/splash/presentation/widgets/splash_logo.dart';

@@ -41,7 +41,6 @@ class LanguagesBloc extends Bloc<LanguagesEvent, LanguagesState> {
       (r) {
         //later code to add navigation
         emit(state.copyWith(status: StateStatusEnum.saved));
-        print("success");
       },
     );
   }

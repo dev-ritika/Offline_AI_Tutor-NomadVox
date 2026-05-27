@@ -1,8 +1,9 @@
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive_ce.dart';
+import 'package:offline_ai_tutor/core/storage/hive/hive_typedids.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/domain/entities/language.dart';
 part 'language_model.g.dart';
 
-@HiveType(typeId: 0)
+@HiveType(typeId: HiveTypedids.languageModelId)
 class LanguageModel {
   @HiveField(0)
   final String langName;

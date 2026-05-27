@@ -71,7 +71,7 @@ class SelectableContainer extends StatelessWidget {
 
                 Flexible(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
                         title,
@@ -89,7 +89,6 @@ class SelectableContainer extends StatelessWidget {
                   ),
                 ),
 
-                //  const Spacer(),
                 if (trailingItem != null) trailingItem!,
 
                 if (isSelected)
