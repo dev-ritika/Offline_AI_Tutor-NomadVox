@@ -13,6 +13,8 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(LanguageModelAdapter());
 
+  await Hive.openBox<LanguageModel>("user_language");
+
   configureDependency();
 
   runApp(const MyApp());
@@ -26,7 +28,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       routes: RoutesConfig.getRoutes,
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Fluent Nomad',
       theme: ThemeConfig.appThemeData(),
       home: const SplashScreen(),
     );

@@ -8,7 +8,9 @@ class ThemeConfig {
   static ThemeData appThemeData() {
     return ThemeData(
       useMaterial3: true,
+      brightness: Brightness.dark,
       colorScheme: ColorScheme.fromSeed(
+        brightness: Brightness.dark,
         seedColor: ColorConsts.primaryColor,
         surface: ColorConsts.backgroundColor,
       ),

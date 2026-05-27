@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:offline_ai_tutor/core/utils/constants/assets_consts.dart';
 import 'package:offline_ai_tutor/core/utils/constants/color_consts.dart';
 
 class SelectIcon extends StatelessWidget {
@@ -19,7 +20,7 @@ class SelectIcon extends StatelessWidget {
       width: 20,
       child: Center(
         child: SvgPicture.asset(
-          "assets/images/tick.svg",
+          AssetsConsts.tickIcon,
           width: 11,
           height: 11,
           colorFilter: ColorFilter.mode(

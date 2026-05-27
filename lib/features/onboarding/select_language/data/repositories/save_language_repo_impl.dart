@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
+import 'package:offline_ai_tutor/core/error_handling/exceptions.dart';
 import 'package:offline_ai_tutor/core/error_handling/failures.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/data/data_model/language_model.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/data/data_sources/save_language_data_source.dart';
@@ -24,8 +25,8 @@ class SaveLanguageRepoImpl implements SelectedLanguageRepository {
       await saveLanguageLocallyDataSource.saveLanguage(languageModel);
 
       return const Right(null);
-    } catch (e) {
-      return const Left(AssetFailure("Something went wrong"));
+    } on HiveDataException catch (e) {
+      return Left(CacheFailure(e.message));
     }
   }
 }

@@ -3,16 +3,16 @@ import 'package:offline_ai_tutor/core/error_handling/failures.dart';
 import 'package:offline_ai_tutor/core/utils/enums/state_enum.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/domain/entities/language.dart';
 
-final class LanguagesLoaded extends Equatable {
+final class LanguagesState extends Equatable {
   final Language? selectedLanguage;
-  final List<Language>? languagesList;
-  final StateStatusEnum? status;
+  final List<Language> languagesList;
+  final StateStatusEnum status;
 
   // final bool? isLoading;
   final Failures? error;
 
-  const LanguagesLoaded({
-    this.status,
+  const LanguagesState({
+    this.status = StateStatusEnum.empty,
     this.error,
     // this.isLoading = false,
     this.languagesList = const [],
@@ -30,7 +30,7 @@ final class LanguagesLoaded extends Equatable {
     return l.langName == selectedLanguage?.langName;
   }
 
-  LanguagesLoaded copyWith({
+  LanguagesState copyWith({
     List<Language>? languagesList,
     Language? selected,
     bool clearSelected = false,
@@ -38,7 +38,7 @@ final class LanguagesLoaded extends Equatable {
     Failures? error,
     bool clearError = false,
   }) {
-    var x = LanguagesLoaded(
+    var x = LanguagesState(
       status: status ?? this.status,
       error: clearError ? null : error ?? this.error,
 

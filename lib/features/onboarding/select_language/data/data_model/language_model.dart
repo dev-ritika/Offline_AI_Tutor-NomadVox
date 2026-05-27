@@ -3,7 +3,7 @@ import 'package:offline_ai_tutor/features/onboarding/select_language/domain/enti
 part 'language_model.g.dart';
 
 @HiveType(typeId: 0)
-class LanguageModel extends HiveObject {
+class LanguageModel {
   @HiveField(0)
   final String langName;
 

@@ -21,7 +21,6 @@ class Language extends Equatable {
     String? nativeName,
     String? langCode,
     String? speakers,
-    bool? isSelected,
   }) {
     return Language(
       langCode: langCode ?? this.langCode,

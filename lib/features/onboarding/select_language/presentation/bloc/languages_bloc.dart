@@ -11,20 +11,20 @@ import 'package:offline_ai_tutor/features/onboarding/select_language/presentatio
 import 'package:offline_ai_tutor/features/onboarding/select_language/presentation/bloc/languages_state.dart';
 
 @injectable
-class LanguagesBloc extends Bloc<LanguagesEvent, LanguagesLoaded> {
+class LanguagesBloc extends Bloc<LanguagesEvent, LanguagesState> {
   final GetLanguages getLanguages;
   final SaveLanguage saveLanguage;
 
   LanguagesBloc({required this.getLanguages, required this.saveLanguage})
-    : super(const LanguagesLoaded()) {
-    on<LanguagesScreenLoads>(_onLanguagesScreenLoads);
-    on<SelectLanguage>(_selectLanguage);
-    on<SaveSelectedLanguage>(_saveSelectedLanguage);
+    : super(const LanguagesState()) {
+    on<LanguagesScreenOpened>(_onLanguagesScreenLoads);
+    on<LanguageSelected>(_selectLanguage);
+    on<LanguageSaved>(_saveSelectedLanguage);
   }
 
   Future<void> _saveSelectedLanguage(
-    SaveSelectedLanguage event,
-    Emitter<LanguagesLoaded> emit,
+    LanguageSaved event,
+    Emitter<LanguagesState> emit,
   ) async {
     if (state.selectedLanguage == null) return;
 
@@ -46,7 +46,7 @@ class LanguagesBloc extends Bloc<LanguagesEvent, LanguagesLoaded> {
     );
   }
 
-  void _selectLanguage(SelectLanguage event, Emitter<LanguagesLoaded> emit) {
+  void _selectLanguage(LanguageSelected event, Emitter<LanguagesState> emit) {
     bool isAlreadySelected =
         state.selectedLanguage?.langCode == event.selectedLanguage?.langCode;
 
@@ -61,8 +61,8 @@ class LanguagesBloc extends Bloc<LanguagesEvent, LanguagesLoaded> {
   }
 
   Future<void> _onLanguagesScreenLoads(
-    LanguagesScreenLoads event,
-    Emitter<LanguagesLoaded> emit,
+    LanguagesScreenOpened event,
+    Emitter<LanguagesState> emit,
   ) async {
     emit(state.copyWith(status: StateStatusEnum.loading));
 
@@ -77,10 +77,8 @@ class LanguagesBloc extends Bloc<LanguagesEvent, LanguagesLoaded> {
         emit(state.copyWith(error: l, status: StateStatusEnum.error));
       },
       (r) {
-        emit(LanguagesLoaded(languagesList: r, status: StateStatusEnum.loaded));
+        emit(LanguagesState(languagesList: r, status: StateStatusEnum.loaded));
       },
     );
-
-    emit(state.copyWith(status: StateStatusEnum.loaded));
   }
 }

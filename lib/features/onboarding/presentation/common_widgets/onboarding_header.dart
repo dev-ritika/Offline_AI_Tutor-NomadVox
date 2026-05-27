@@ -13,7 +13,7 @@ class OnboardingHeader extends StatelessWidget {
     required this.totalStep,
     required this.title,
     required this.subtitle,
-  }) : assert(currentStep <= totalStep);
+  }) : assert(currentStep >= 1 && currentStep <= totalStep);
 
   @override
   Widget build(BuildContext context) {

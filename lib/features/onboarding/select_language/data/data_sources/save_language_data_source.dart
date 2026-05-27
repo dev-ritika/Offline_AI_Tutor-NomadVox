@@ -13,9 +13,7 @@ class SaveLanguageLocallyDataSourceImpl
   @override
   Future<void> saveLanguage(LanguageModel selectedLanguage) async {
     try {
-      final Box<LanguageModel> box = await Hive.openBox<LanguageModel>(
-        "User_Language",
-      );
+      final Box<LanguageModel> box = Hive.box<LanguageModel>("user_language");
 
       await box.put("selected_language", selectedLanguage);
 

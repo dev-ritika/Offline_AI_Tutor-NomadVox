@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:offline_ai_tutor/config/routes/routes_names.dart';
 import 'package:offline_ai_tutor/core/common_widgets/primary_button.dart';
 import 'package:offline_ai_tutor/core/dependency_injection/dependency_injection.dart';
+import 'package:offline_ai_tutor/core/error_handling/failures.dart';
 import 'package:offline_ai_tutor/core/utils/constants/color_consts.dart';
 import 'package:offline_ai_tutor/core/utils/constants/string_consts.dart';
 import 'package:offline_ai_tutor/core/utils/enums/state_enum.dart';
@@ -17,74 +20,94 @@ class SelectLanguageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => sl<LanguagesBloc>()..add(LanguagesScreenLoads()),
-      child: Stack(
-        children: [
-          Scaffold(
-            body: SafeArea(
-              bottom: false,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 18,
-                  vertical: 25,
-                ),
-                child: Column(
-                  children: [
-                    const Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          OnboardingHeader(
-                            currentStep: 1,
-                            totalStep: 3,
-                            title: StringConsts.stepTitle,
-                            subtitle: StringConsts.stepSubTitle,
-                          ),
-                          LanguagesButtons(),
-                        ],
+      create: (_) => sl<LanguagesBloc>()..add(const LanguagesScreenOpened()),
+      child: BlocListener<LanguagesBloc, LanguagesState>(
+        listenWhen: (previous, current) =>
+            previous.status != current.status &&
+            (current.status == StateStatusEnum.error ||
+                current.status == StateStatusEnum.saved),
+
+        listener: (context, state) {
+          if (state.error is AssetFailure) {
+            Fluttertoast.showToast(
+              msg: state.error?.message ?? "Error occurred",
+            );
+          }
+          if (state.status == StateStatusEnum.saved) {
+            Navigator.of(
+              context,
+            ).pushReplacementNamed(RoutesNames.selectLevelScreen);
+          }
+        },
+
+        child: Stack(
+          children: [
+            Scaffold(
+              body: SafeArea(
+                bottom: false,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 18,
+                    vertical: 25,
+                  ),
+                  child: Column(
+                    children: [
+                      const Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            OnboardingHeader(
+                              currentStep: 1,
+                              totalStep: 3,
+                              title: StringConsts.stepTitle,
+                              subtitle: StringConsts.stepSubTitle,
+                            ),
+                            LanguagesButtons(),
+                          ],
+                        ),
                       ),
-                    ),
-                    BlocSelector<
-                      LanguagesBloc,
-                      LanguagesLoaded,
-                      ({bool hasSelection, StateStatusEnum? status})
-                    >(
-                      selector: (state) => (
-                        hasSelection: state.hasSelection,
-                        status: state.status,
+                      BlocSelector<
+                        LanguagesBloc,
+                        LanguagesState,
+                        ({bool hasSelection, StateStatusEnum? status})
+                      >(
+                        selector: (state) => (
+                          hasSelection: state.hasSelection,
+                          status: state.status,
+                        ),
+                        builder: (context, data) {
+                          return PrimaryButton(
+                            showLoader: data.status == StateStatusEnum.saving,
+                            buttonText: StringConsts.continueText,
+                            onTap: data.hasSelection
+                                ? () {
+                                    context.read<LanguagesBloc>().add(
+                                      const LanguageSaved(),
+                                    );
+                                  }
+                                : null,
+                          );
+                        },
                       ),
-                      builder: (context, data) {
-                        return PrimaryButton(
-                          showLoader: data.status == StateStatusEnum.saving,
-                          buttonText: StringConsts.continueText,
-                          onTap: data.hasSelection
-                              ? () {
-                                  context.read<LanguagesBloc>().add(
-                                    SaveSelectedLanguage(),
-                                  );
-                                }
-                              : null,
-                        );
-                      },
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
 
-          BlocSelector<LanguagesBloc, LanguagesLoaded, bool>(
-            selector: (state) => state.isLoading ?? false,
-            builder: (context, isLoading) => isLoading
-                ? Container(
-                    height: double.infinity,
-                    width: double.infinity,
-                    color: ColorConsts.blackOverlay,
-                    child: const Center(child: CircularProgressIndicator()),
-                  )
-                : const SizedBox.shrink(),
-          ),
-        ],
+            BlocSelector<LanguagesBloc, LanguagesState, bool>(
+              selector: (state) => state.isLoading,
+              builder: (context, isLoading) => isLoading
+                  ? Container(
+                      height: double.infinity,
+                      width: double.infinity,
+                      color: ColorConsts.blackOverlay,
+                      child: const Center(child: CircularProgressIndicator()),
+                    )
+                  : const SizedBox.shrink(),
+            ),
+          ],
+        ),
       ),
     );
   }

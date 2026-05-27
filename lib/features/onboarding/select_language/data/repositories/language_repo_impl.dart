@@ -22,8 +22,6 @@ class LanguageRepoImpl implements LanguageRepository {
       final List<Language> languages = languagesList.map((e) {
         return e.toDomain();
       }).toList();
-
-      // return left(AssetFailure("Asset loading failure "));
       return right(languages);
     } on LanguageDataException catch (e) {
       return left(AssetFailure("Asset loading failure $e"));

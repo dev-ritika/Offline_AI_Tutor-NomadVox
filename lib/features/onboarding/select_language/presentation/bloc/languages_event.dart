@@ -8,15 +8,19 @@ abstract class LanguagesEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class LanguagesScreenLoads extends LanguagesEvent {}
+class LanguagesScreenOpened extends LanguagesEvent {
+  const LanguagesScreenOpened();
+}
 
-class SelectLanguage extends LanguagesEvent {
+class LanguageSelected extends LanguagesEvent {
   final Language? selectedLanguage;
 
-  const SelectLanguage({this.selectedLanguage});
+  const LanguageSelected({this.selectedLanguage});
 
   @override
   List<Object?> get props => [selectedLanguage];
 }
 
-class SaveSelectedLanguage extends LanguagesEvent {}
+class LanguageSaved extends LanguagesEvent {
+  const LanguageSaved();
+}
