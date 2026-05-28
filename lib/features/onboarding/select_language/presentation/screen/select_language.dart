@@ -59,8 +59,8 @@ class SelectLanguageScreen extends StatelessWidget {
                             OnboardingHeader(
                               currentStep: 1,
                               totalStep: 3,
-                              title: StringConsts.stepTitle,
-                              subtitle: StringConsts.stepSubTitle,
+                              title: StringConsts.selectLanguageTitle,
+                              subtitle: StringConsts.selectLanguageSubTitle,
                             ),
                             LanguagesButtons(),
                           ],

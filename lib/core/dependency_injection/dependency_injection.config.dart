@@ -42,6 +42,16 @@ import 'package:offline_ai_tutor/features/onboarding/select_language/domain/use_
     as _i97;
 import 'package:offline_ai_tutor/features/onboarding/select_language/presentation/bloc/languages_bloc.dart'
     as _i620;
+import 'package:offline_ai_tutor/features/onboarding/select_level/data/data_source/level_local_data_source.dart'
+    as _i215;
+import 'package:offline_ai_tutor/features/onboarding/select_level/data/repositories/level_repository_impl.dart'
+    as _i170;
+import 'package:offline_ai_tutor/features/onboarding/select_level/domain/repositories/level_repository.dart'
+    as _i988;
+import 'package:offline_ai_tutor/features/onboarding/select_level/domain/usecases/get_levels.dart'
+    as _i527;
+import 'package:offline_ai_tutor/features/onboarding/select_level/presentation/cubit/levels_cubit.dart'
+    as _i38;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -55,10 +65,20 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i281.AssetBundle>(() => registerModule.assetBundle);
     gh.lazySingleton<_i869.LanguagesParser>(() => _i869.LanguagesParser());
     gh.lazySingleton<_i314.HiveInitializer>(() => _i314.HiveInitializerImpl());
+    gh.lazySingleton<_i215.LevelLocalDataSource>(
+      () => const _i215.LevelLocalDataSourceImpl(),
+    );
+    gh.lazySingleton<_i988.LevelRepository>(
+      () => _i170.LevelRepositoryImpl(gh<_i215.LevelLocalDataSource>()),
+    );
     gh.lazySingleton<_i738.Box<_i556.LanguageModel>>(
       () => hiveBoxesModule.getUserPrefBox,
       instanceName: 'userPrefs',
     );
+    gh.lazySingleton<_i527.GetLevels>(
+      () => _i527.GetLevels(gh<_i988.LevelRepository>()),
+    );
+    gh.factory<_i38.LevelsCubit>(() => _i38.LevelsCubit(gh<_i527.GetLevels>()));
     gh.lazySingleton<_i156.LanguageLocalDataSource>(
       () => _i156.LanguageLocalDataSourceImpl(
         rootBundle: gh<_i281.AssetBundle>(),

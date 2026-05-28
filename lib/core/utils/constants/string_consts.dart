@@ -10,11 +10,12 @@ class StringConsts {
     return "STEP $currentStep OF $totalStep";
   }
 
-  static const String stepTitle = "Choose a language";
-  static const String stepSubTitle = "You can change later";
+  static const String selectLanguageTitle = "Choose a language";
+  static const String selectLanguageSubTitle = "You can change later";
 
-  static const String levelTitle = "What's your level ?";
-  static const String levelSubTitle = "Your tutor adapts based on your answer";
+  static const String selectLevelTitle = "What's your level ?";
+  static const String selectLevelSubTitle =
+      "Your tutor adapts based on your answer";
 
   //common
   static const String continueText = "Continue";
