@@ -1,5 +1,7 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:offline_ai_tutor/core/error_handling/failures.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_level/domain/entities/level.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_level/domain/usecases/get_levels.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_level/presentation/cubit/levels_state.dart';
@@ -10,10 +12,12 @@ class LevelsCubit extends Cubit<LevelsState> {
 
   LevelsCubit(this.getLevels) : super(const LevelsState());
 
-  void getLevelsList() {
-    final List<Level> list = getLevels();
+  void loadLevels() async {
+    final Either<Failures, List<Level>> data = await getLevels();
 
-    emit(LevelsState(levelsList: list));
+    data.fold((l) {}, (list) {
+      emit(LevelsState(levelsList: list));
+    });
   }
 
   void selectLevel(Level? selectedLevel) {

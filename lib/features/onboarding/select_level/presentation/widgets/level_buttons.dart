@@ -23,18 +23,14 @@ class LevelButtons extends StatelessWidget {
             separatorBuilder: (context, index) => const SizedBox(height: 20),
             itemCount: state.levelList?.length ?? 0,
             itemBuilder: (context, index) {
+              final data = state.levelList![index];
               return SelectableContainer(
                 onTap: () {
-                  context.read<LevelsCubit>().selectLevel(
-                    state.levelList![index],
-                  );
+                  context.read<LevelsCubit>().selectLevel(data);
                 },
-                title: state.levelList![index].title,
-                subtitle: state.levelList![index].subTitle,
-
-                //todo
-                isSelected:
-                    state.levelList![index].title == state.selectedLevel?.title,
+                title: data.title,
+                subtitle: data.subTitle,
+                isSelected: data == state.selectedLevel,
               );
             },
           ),

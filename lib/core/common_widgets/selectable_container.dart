@@ -38,7 +38,7 @@ class SelectableContainer extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        borderRadius: BorderRadius.all(Radius.circular(12)),
+        borderRadius: const BorderRadius.all(Radius.circular(12)),
         onTap: onTap,
         child: Container(
           height: height,

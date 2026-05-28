@@ -11,6 +11,6 @@ class LevelLocalDataSourceImpl implements LevelLocalDataSource {
 
   @override
   List<LevelDataModel> getLevelsList() {
-    return LevelDataModel.getList();
+    return LevelDataModel.getList;
   }
 }

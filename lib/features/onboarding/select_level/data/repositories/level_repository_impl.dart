@@ -1,4 +1,6 @@
+import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
+import 'package:offline_ai_tutor/core/error_handling/failures.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_level/data/data_model/level_data_model.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_level/data/data_source/level_local_data_source.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_level/domain/entities/level.dart';
@@ -11,11 +13,11 @@ class LevelRepositoryImpl implements LevelRepository {
   LevelRepositoryImpl(this.levelLocalDataSource);
 
   @override
-  List<Level> getLevelsListData() {
+  Future<Either<Failures, List<Level>>> getLevels() async {
     final List<LevelDataModel> data = levelLocalDataSource.getLevelsList();
 
     final List<Level> levelsList = data.map((x) => x.toDomain()).toList();
 
-    return levelsList;
+    return right(levelsList);
   }
 }

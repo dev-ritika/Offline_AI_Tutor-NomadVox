@@ -14,7 +14,7 @@ class SelectLevelScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => sl<LevelsCubit>()..getLevelsList(),
+      create: (context) => sl<LevelsCubit>()..loadLevels(),
       child: Scaffold(
         body: SafeArea(
           bottom: false,
@@ -38,7 +38,7 @@ class SelectLevelScreen extends StatelessWidget {
                 ),
 
                 BlocSelector<LevelsCubit, LevelsState, bool>(
-                  selector: (state) => state.isSelected,
+                  selector: (state) => state.hasSelection,
 
                   builder: (context, isSelected) {
                     return PrimaryButton(
