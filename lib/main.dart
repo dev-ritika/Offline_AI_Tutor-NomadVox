@@ -3,6 +3,7 @@ import 'package:offline_ai_tutor/config/routes/routes_config.dart';
 import 'package:offline_ai_tutor/config/theme/theme_config.dart';
 import 'package:offline_ai_tutor/core/dependency_injection/dependency_injection.dart';
 import 'package:offline_ai_tutor/core/storage/hive/hive_initializer.dart';
+import 'package:offline_ai_tutor/features/onboarding/presentation/screen/onboarding.dart';
 import 'package:offline_ai_tutor/features/splash/presentation/screen/splash.dart';
 
 void main() async {
@@ -25,7 +26,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Fluent Nomad',
       theme: ThemeConfig.appThemeData(),
-      home: const SplashScreen(),
+      // home: const SplashScreen(),
+      home: OnboardingScreen(),
     );
   }
 }

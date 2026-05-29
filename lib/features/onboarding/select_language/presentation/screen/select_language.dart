@@ -8,7 +8,7 @@ import 'package:offline_ai_tutor/core/error_handling/failures.dart';
 import 'package:offline_ai_tutor/core/utils/constants/color_consts.dart';
 import 'package:offline_ai_tutor/core/utils/constants/string_consts.dart';
 import 'package:offline_ai_tutor/core/utils/enums/state_enum.dart';
-import 'package:offline_ai_tutor/features/onboarding/presentation/common_widgets/onboarding_header.dart';
+import 'package:offline_ai_tutor/features/onboarding/presentation/widgets/onboarding_header.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/presentation/bloc/languages_bloc.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/presentation/bloc/languages_event.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_language/presentation/bloc/languages_state.dart';
@@ -57,10 +57,10 @@ class SelectLanguageScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             OnboardingHeader(
-                              currentStep: 1,
-                              totalStep: 3,
-                              title: StringConsts.selectLanguageTitle,
-                              subtitle: StringConsts.selectLanguageSubTitle,
+                              //currentStep: 1,
+                              //totalStep: 3,
+                              //title: StringConsts.selectLanguageTitle,
+                              //subtitle: StringConsts.selectLanguageSubTitle,
                             ),
                             LanguagesButtons(),
                           ],

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offline_ai_tutor/core/common_widgets/primary_button.dart';
 import 'package:offline_ai_tutor/core/dependency_injection/dependency_injection.dart';
 import 'package:offline_ai_tutor/core/utils/constants/string_consts.dart';
-import 'package:offline_ai_tutor/features/onboarding/presentation/common_widgets/onboarding_header.dart';
+import 'package:offline_ai_tutor/features/onboarding/presentation/widgets/onboarding_header.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_level/presentation/cubit/levels_cubit.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_level/presentation/cubit/levels_state.dart';
 import 'package:offline_ai_tutor/features/onboarding/select_level/presentation/widgets/level_buttons.dart';
@@ -27,10 +27,10 @@ class SelectLevelScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       OnboardingHeader(
-                        currentStep: 2,
-                        totalStep: 3,
-                        title: StringConsts.selectLevelTitle,
-                        subtitle: StringConsts.selectLevelSubTitle,
+                        // currentStep: 2,
+                        // totalStep: 3,
+                        // title: StringConsts.selectLevelTitle,
+                        // subtitle: StringConsts.selectLevelSubTitle,
                       ),
                       LevelButtons(),
                     ],
