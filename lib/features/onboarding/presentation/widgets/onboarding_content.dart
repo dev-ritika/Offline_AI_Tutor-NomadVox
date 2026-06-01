@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:offline_ai_tutor/features/onboarding/presentation/widgets/languages_buttons.dart';
+import 'package:offline_ai_tutor/features/onboarding/presentation/widgets/level_buttons.dart';
 
 class OnboardingContent extends StatelessWidget {
   final PageController pageController;
@@ -9,43 +11,7 @@ class OnboardingContent extends StatelessWidget {
     return PageView(
       controller: pageController,
       physics: const NeverScrollableScrollPhysics(),
-      children: [
-        Container(
-          child: ElevatedButton(
-            onPressed: () {
-              pageController.nextPage(
-                duration: Duration(milliseconds: 1),
-                curve: Curves.easeIn,
-              );
-            },
-            child: Text("1"),
-          ),
-        ),
-
-        Container(
-          child: ElevatedButton(
-            onPressed: () {
-              pageController.nextPage(
-                duration: Duration(milliseconds: 1),
-                curve: Curves.easeIn,
-              );
-            },
-            child: Text("2"),
-          ),
-        ),
-
-        Container(
-          child: ElevatedButton(
-            onPressed: () {
-              pageController.nextPage(
-                duration: Duration(milliseconds: 1),
-                curve: Curves.easeIn,
-              );
-            },
-            child: Text("3"),
-          ),
-        ),
-      ],
+      children: const [LanguagesButtons(), LevelButtons()],
     );
   }
 }

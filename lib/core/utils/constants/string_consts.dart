@@ -17,6 +17,9 @@ class StringConsts {
   static const String selectLevelSubTitle =
       "Your tutor adapts based on your answer";
 
+  static const String enterNameTitle = "What should we call you?";
+  static const String enterNameSubTitle = "Let's make this personal.";
+
   //common
   static const String continueText = "Continue";
 }

@@ -11,24 +11,32 @@ class OnboardingAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocSelector<OnboardingCubit, OnboardingState, OnboardingHeaderEnum>(
+    return BlocSelector<
+      OnboardingCubit,
+      OnboardingState,
+      ({OnboardingStepEnum currentStepData, bool isEnabled})
+    >(
       selector: (state) {
-        return state.onboardingHeader;
+        return (currentStepData: state.currentStep, isEnabled: state.isEnabled);
       },
       builder: (context, state) {
         return PrimaryButton(
           buttonText: "Continue",
-          onTap: () {
-            if (state.currentStep < state.totalStep) {
-              pageController.nextPage(
-                duration: const Duration(milliseconds: 1),
-                curve: Curves.easeIn,
-              );
-              context.read<OnboardingCubit>().loadNextContent();
-            } else {
-              //TODO logic for navigation to next page
-            }
-          },
+
+          onTap: !state.isEnabled
+              ? null
+              : () {
+                  if (state.currentStepData.currentStep <
+                      state.currentStepData.totalStep) {
+                    pageController.nextPage(
+                      duration: const Duration(milliseconds: 1),
+                      curve: Curves.easeIn,
+                    );
+                    context.read<OnboardingCubit>().loadNextContent();
+                  } else {
+                    //TODO logic for navigation to next page
+                  }
+                },
         );
       },
     );

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:offline_ai_tutor/core/dependency_injection/dependency_injection.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_cubit.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/widgets/onboarding_action.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/widgets/onboarding_content.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/widgets/onboarding_header.dart';
+import 'package:offline_ai_tutor/features/onboarding/presentation/widgets/onboarding_loader.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -25,7 +27,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     return BlocProvider(
       //TO DO ADD VIA DEPENDENCY INJECTION
-      create: (context) => OnboardingCubit()..loadNextContent(),
+      create: (context) => sl<OnboardingCubit>()..onLanguagesLoads(),
+      // OnboardingCubit(getLanguages: sl(), getLevels: sl())
+      //   ..onLanguagesLoads(),
       child: Stack(
         children: [
           Scaffold(
@@ -61,9 +65,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
           ),
-        ],
 
-        //loader
+          //loader
+          const OnboardingLoader(),
+        ],
       ),
     );
   }

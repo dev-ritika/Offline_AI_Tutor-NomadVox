@@ -1,6 +1,6 @@
 import 'package:offline_ai_tutor/core/utils/constants/string_consts.dart';
 
-enum OnboardingHeaderEnum {
+enum OnboardingStepEnum {
   language(
     title: StringConsts.selectLanguageTitle,
     subtitle: StringConsts.selectLanguageSubTitle,
@@ -15,9 +15,9 @@ enum OnboardingHeaderEnum {
     totalStep: 3,
   ),
 
-  last(
-    title: StringConsts.selectLevelTitle,
-    subtitle: StringConsts.selectLevelSubTitle,
+  name(
+    title: StringConsts.enterNameTitle,
+    subtitle: StringConsts.enterNameSubTitle,
     currentStep: 3,
     totalStep: 3,
   );
@@ -27,10 +27,13 @@ enum OnboardingHeaderEnum {
   final int currentStep;
   final int totalStep;
 
-  const OnboardingHeaderEnum({
+  const OnboardingStepEnum({
     required this.title,
     required this.subtitle,
     required this.currentStep,
     this.totalStep = 3,
   });
+
+  OnboardingStepEnum? get nextStep =>
+      index + 1 > values.length ? null : values[index + 1];
 }

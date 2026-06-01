@@ -3,7 +3,7 @@
 // Check in to version control
 
 import 'package:hive_ce/hive_ce.dart';
-import 'package:offline_ai_tutor/features/onboarding/select_language/data/data_model/language_model.dart';
+import 'package:offline_ai_tutor/features/onboarding/data/data_model/language_model.dart';
 
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {

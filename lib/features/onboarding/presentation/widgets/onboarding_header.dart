@@ -10,8 +10,8 @@ class OnboardingHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocSelector<OnboardingCubit, OnboardingState, OnboardingHeaderEnum>(
-      selector: (state) => state.onboardingHeader,
+    return BlocSelector<OnboardingCubit, OnboardingState, OnboardingStepEnum>(
+      selector: (state) => state.currentStep,
       builder: (context, state) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
