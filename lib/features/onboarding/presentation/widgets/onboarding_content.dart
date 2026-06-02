@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/widgets/languages_buttons.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/widgets/level_buttons.dart';
+import 'package:offline_ai_tutor/features/onboarding/presentation/widgets/name_field.dart';
 
 class OnboardingContent extends StatelessWidget {
   final PageController pageController;
@@ -8,10 +9,14 @@ class OnboardingContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PageView(
-      controller: pageController,
-      physics: const NeverScrollableScrollPhysics(),
-      children: const [LanguagesButtons(), LevelButtons()],
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: PageView(
+        controller: pageController,
+        physics: const NeverScrollableScrollPhysics(),
+
+        children: const [LanguagesButtons(), LevelButtons(), NameField()],
+      ),
     );
   }
 }

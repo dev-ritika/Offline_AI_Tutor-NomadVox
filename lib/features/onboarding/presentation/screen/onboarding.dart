@@ -30,45 +30,48 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       create: (context) => sl<OnboardingCubit>()..onLanguagesLoads(),
       // OnboardingCubit(getLanguages: sl(), getLevels: sl())
       //   ..onLanguagesLoads(),
-      child: Stack(
-        children: [
-          Scaffold(
-            body: SafeArea(
-              bottom: false,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 18,
-                  vertical: 25,
-                ),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          //header
-                          const OnboardingHeader(),
-                          //content
-                          Expanded(
-                            child: OnboardingContent(
-                              pageController: pageController,
+      child: GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: Stack(
+          children: [
+            Scaffold(
+              body: SafeArea(
+                bottom: false,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 18,
+                    vertical: 25,
+                  ),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            //header
+                            const OnboardingHeader(),
+                            //content
+                            Expanded(
+                              child: OnboardingContent(
+                                pageController: pageController,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
 
-                    //button
-                    OnboardingAction(pageController: pageController),
-                  ],
+                      //button
+                      OnboardingAction(pageController: pageController),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
 
-          //loader
-          const OnboardingLoader(),
-        ],
+            //loader
+            const OnboardingLoader(),
+          ],
+        ),
       ),
     );
   }

@@ -19,15 +19,22 @@ class ThemeConfig {
       primaryTextTheme: primaryTextTheme,
       textTheme: primaryTextTheme,
 
+      inputDecorationTheme: InputDecorationThemeData(
+        hintStyle: primaryTextTheme.bodyLarge,
+
+        enabledBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: ColorConsts.primaryColor),
+        ),
+        focusedBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: ColorConsts.primaryColor, width: 2),
+        ),
+      ),
+
       appBarTheme: AppBarTheme(
         backgroundColor: ColorConsts.backgroundColor,
         foregroundColor: ColorConsts.textPrimaryColor,
         centerTitle: false,
-        titleTextStyle: GoogleFonts.syne(
-          color: ColorConsts.textPrimaryColor,
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-        ),
+        titleTextStyle: primaryTextTheme.titleMedium,
       ),
 
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -46,13 +53,7 @@ class ThemeConfig {
             ColorConsts.textPrimaryColor,
           ),
 
-          textStyle: WidgetStatePropertyAll(
-            GoogleFonts.dmSans(
-              color: ColorConsts.textPrimaryColor,
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
+          textStyle: WidgetStatePropertyAll(primaryTextTheme.titleSmall),
         ),
       ),
     );
@@ -64,6 +65,12 @@ class ThemeConfig {
       color: ColorConsts.textPrimaryColor,
       fontSize: 36,
       fontWeight: FontWeight.bold,
+    ),
+
+    //muted text med
+    bodyLarge: GoogleFonts.dmSans(
+      color: ColorConsts.whiteColor35,
+      fontSize: 16,
     ),
 
     //muted text med

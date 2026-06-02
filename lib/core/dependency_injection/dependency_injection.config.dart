@@ -28,20 +28,20 @@ import 'package:offline_ai_tutor/features/onboarding/data/data_sources/languages
     as _i718;
 import 'package:offline_ai_tutor/features/onboarding/data/data_sources/level_local_data_source.dart'
     as _i510;
-import 'package:offline_ai_tutor/features/onboarding/data/data_sources/save_language_data_source.dart'
-    as _i565;
+import 'package:offline_ai_tutor/features/onboarding/data/data_sources/save_user_data_source.dart'
+    as _i463;
 import 'package:offline_ai_tutor/features/onboarding/data/repositories/language_repo_impl.dart'
     as _i590;
 import 'package:offline_ai_tutor/features/onboarding/data/repositories/level_repository_impl.dart'
     as _i990;
-import 'package:offline_ai_tutor/features/onboarding/data/repositories/save_language_repo_impl.dart'
-    as _i515;
+import 'package:offline_ai_tutor/features/onboarding/data/repositories/save_user_data_repo_impl.dart'
+    as _i974;
 import 'package:offline_ai_tutor/features/onboarding/domain/repositories/language_repo.dart'
     as _i837;
 import 'package:offline_ai_tutor/features/onboarding/domain/repositories/level_repository.dart'
     as _i984;
-import 'package:offline_ai_tutor/features/onboarding/domain/repositories/selected_language_repo.dart'
-    as _i150;
+import 'package:offline_ai_tutor/features/onboarding/domain/repositories/save_user_data_repo.dart'
+    as _i386;
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/get_languages.dart'
     as _i925;
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/get_levels.dart'
@@ -79,8 +79,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i984.LevelRepository>(
       () => _i990.LevelRepositoryImpl(gh<_i510.LevelLocalDataSource>()),
     );
-    gh.lazySingleton<_i565.SaveLanguageLocallyDataSource>(
-      () => _i565.SaveLanguageLocallyDataSourceImpl(
+    gh.lazySingleton<_i463.SaveUserDataLocallyDataSource>(
+      () => _i463.SaveUserDataLocallyDataSourceImpl(
         gh<_i1055.Box<_i233.LanguageModel>>(instanceName: 'userPrefs'),
       ),
     );
@@ -92,10 +92,10 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i1031.GetLevels>(
       () => _i1031.GetLevels(gh<_i984.LevelRepository>()),
     );
-    gh.lazySingleton<_i150.SelectedLanguageRepository>(
-      () => _i515.SaveLanguageRepoImpl(
-        saveLanguageLocallyDataSource:
-            gh<_i565.SaveLanguageLocallyDataSource>(),
+    gh.lazySingleton<_i386.SaveUserDataRepo>(
+      () => _i974.SaveUserDataRepoImpl(
+        saveUserDataLocallyDataSource:
+            gh<_i463.SaveUserDataLocallyDataSource>(),
       ),
     );
     gh.lazySingleton<_i925.GetLanguages>(
@@ -104,9 +104,7 @@ extension GetItInjectableX on _i174.GetIt {
       ),
     );
     gh.lazySingleton<_i930.SaveLanguage>(
-      () => _i930.SaveLanguage(
-        selectedLanguageRepository: gh<_i150.SelectedLanguageRepository>(),
-      ),
+      () => _i930.SaveLanguage(saveUserDataRepo: gh<_i386.SaveUserDataRepo>()),
     );
     gh.factory<_i960.OnboardingCubit>(
       () => _i960.OnboardingCubit(

@@ -29,7 +29,7 @@ class OnboardingAction extends StatelessWidget {
                   if (state.currentStepData.currentStep <
                       state.currentStepData.totalStep) {
                     pageController.nextPage(
-                      duration: const Duration(milliseconds: 1),
+                      duration: const Duration(milliseconds: 200),
                       curve: Curves.easeIn,
                     );
                     context.read<OnboardingCubit>().loadNextContent();

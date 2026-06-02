@@ -87,6 +87,10 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     );
   }
 
+  void enterName(String? username) {
+    emit(state.copyWith(enteredName: username));
+  }
+
   //  Future<void> _saveSelectedLanguage(
   //   LanguageSaved event,
   //   Emitter<LanguagesState> emit,

@@ -6,12 +6,10 @@ import 'package:offline_ai_tutor/features/onboarding/domain/entities/level.dart'
 import 'package:offline_ai_tutor/features/onboarding/presentation/utils/onboarding_header_enum.dart';
 
 class OnboardingState extends Equatable {
-  // final int currentStep;
   final OnboardingStepEnum currentStep;
   final Language? selectedLanguage;
-
-  //TO DO level type
-  final selectedLevel;
+  final Level? selectedLevel;
+  final String? enteredName;
   final List<Language>? languagesList;
   final List<Level>? levelsList;
   final StateStatusEnum status;
@@ -22,6 +20,7 @@ class OnboardingState extends Equatable {
     this.languagesList,
     this.levelsList,
     this.selectedLevel,
+    this.enteredName,
     required this.status,
     this.error,
     required this.currentStep,
@@ -31,6 +30,7 @@ class OnboardingState extends Equatable {
     : currentStep = OnboardingStepEnum.language,
       languagesList = const [],
       levelsList = const [],
+      enteredName = '',
       selectedLevel = null,
       status = StateStatusEnum.empty,
       error = null,
@@ -42,12 +42,14 @@ class OnboardingState extends Equatable {
     StateStatusEnum? status,
     OnboardingStepEnum? currentStep,
     List<Level>? levelsList,
+    String? enteredName,
     selectedLevel,
     Failures? error,
     bool clearLanguageSelection = false,
     bool clearLevelSelection = false,
   }) {
     return OnboardingState(
+      enteredName: enteredName ?? this.enteredName,
       levelsList: levelsList ?? this.levelsList,
       currentStep: currentStep ?? this.currentStep,
       languagesList: languagesList ?? this.languagesList,
@@ -71,6 +73,7 @@ class OnboardingState extends Equatable {
     error,
     selectedLevel,
     levelsList,
+    enteredName,
   ];
 
   bool get isLoading => status == StateStatusEnum.loading;
@@ -78,6 +81,7 @@ class OnboardingState extends Equatable {
   bool get isEnabled => switch (currentStep) {
     OnboardingStepEnum.language => selectedLanguage != null,
     OnboardingStepEnum.level => selectedLevel != null,
+    OnboardingStepEnum.name => (enteredName?.length ?? 0) >= 2,
     _ => false,
   };
 }
