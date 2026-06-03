@@ -10,9 +10,16 @@ class OnboardingLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocSelector<OnboardingCubit, OnboardingState, bool>(
-      selector: (state) => state.isLoading,
-      builder: (context, isLoading) => isLoading
+    return BlocSelector<
+      OnboardingCubit,
+      OnboardingState,
+      ({bool isLoading, bool isSaving})
+    >(
+      selector: (state) => (
+        isLoading: state.isLoading,
+        isSaving: state.status == StateStatusEnum.saving,
+      ),
+      builder: (context, data) => data.isLoading || data.isSaving
           ? Container(
               height: double.infinity,
               width: double.infinity,

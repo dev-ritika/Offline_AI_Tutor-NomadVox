@@ -8,7 +8,7 @@ part of 'language_model.dart';
 
 class LanguageModelAdapter extends TypeAdapter<LanguageModel> {
   @override
-  final typeId = 0;
+  final typeId = 1;
 
   @override
   LanguageModel read(BinaryReader reader) {

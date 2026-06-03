@@ -1,8 +1,17 @@
+import 'package:hive_ce_flutter/hive_ce_flutter.dart';
+import 'package:offline_ai_tutor/core/storage/hive/hive_type_ids.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/level.dart';
+part 'level_data_model.g.dart';
 
+@HiveType(typeId: HiveTypeIds.levelModelId)
 class LevelDataModel {
+  @HiveField(0)
   final String code;
+
+  @HiveField(1)
   final String title;
+
+  @HiveField(2)
   final String subTitle;
 
   const LevelDataModel({
@@ -13,6 +22,14 @@ class LevelDataModel {
 
   Level toDomain() {
     return Level(title: title, subTitle: subTitle, code: code);
+  }
+
+  factory LevelDataModel.fromDomain(Level data) {
+    return LevelDataModel(
+      code: data.code,
+      title: data.title,
+      subTitle: data.subTitle,
+    );
   }
 
   static const List<LevelDataModel> getList = [

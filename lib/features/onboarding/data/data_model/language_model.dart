@@ -1,9 +1,9 @@
-import 'package:hive_ce/hive_ce.dart';
-import 'package:offline_ai_tutor/core/storage/hive/hive_typedids.dart';
+import 'package:hive_ce/hive.dart';
+import 'package:offline_ai_tutor/core/storage/hive/hive_type_ids.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/language.dart';
 part 'language_model.g.dart';
 
-@HiveType(typeId: HiveTypedids.languageModelId)
+@HiveType(typeId: HiveTypeIds.languageModelId)
 class LanguageModel {
   @HiveField(0)
   final String langName;
@@ -17,7 +17,7 @@ class LanguageModel {
   @HiveField(3)
   final String speakers;
 
-  LanguageModel({
+  const LanguageModel({
     required this.langCode,
     required this.langName,
     required this.nativeName,

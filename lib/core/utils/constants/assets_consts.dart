@@ -2,7 +2,7 @@ class AssetsConsts {
   AssetsConsts._();
 
   //images
-  static const String logoImage = "assets/images/app_icon.png";
+  static const String logoImage = "assets/images/splash_logo.png";
   static const String tickIcon = "assets/images/tick.svg";
 
   //files

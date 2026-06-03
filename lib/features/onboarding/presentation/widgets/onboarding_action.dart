@@ -6,8 +6,7 @@ import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboardi
 import 'package:offline_ai_tutor/features/onboarding/presentation/utils/onboarding_header_enum.dart';
 
 class OnboardingAction extends StatelessWidget {
-  final PageController pageController;
-  const OnboardingAction({super.key, required this.pageController});
+  const OnboardingAction({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,18 +24,7 @@ class OnboardingAction extends StatelessWidget {
 
           onTap: !state.isEnabled
               ? null
-              : () {
-                  if (state.currentStepData.currentStep <
-                      state.currentStepData.totalStep) {
-                    pageController.nextPage(
-                      duration: const Duration(milliseconds: 200),
-                      curve: Curves.easeIn,
-                    );
-                    context.read<OnboardingCubit>().loadNextContent();
-                  } else {
-                    //TODO logic for navigation to next page
-                  }
-                },
+              : () => context.read<OnboardingCubit>().goNext(),
         );
       },
     );

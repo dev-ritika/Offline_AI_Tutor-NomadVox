@@ -1,5 +1,5 @@
 class HiveKeys {
   HiveKeys._();
 
-  static const String selectedLanguageKey = "selected_language";
+  static const String userDataKey = "user_data";
 }

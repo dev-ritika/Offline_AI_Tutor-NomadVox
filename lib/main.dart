@@ -26,8 +26,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Fluent Nomad',
       theme: ThemeConfig.appThemeData(),
-      // home: const SplashScreen(),
-      home: OnboardingScreen(),
+      home: const SplashScreen(),
+      //  home: OnboardingScreen(),
     );
   }
 }

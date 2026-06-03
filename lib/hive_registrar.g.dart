@@ -4,15 +4,21 @@
 
 import 'package:hive_ce/hive_ce.dart';
 import 'package:offline_ai_tutor/features/onboarding/data/data_model/language_model.dart';
+import 'package:offline_ai_tutor/features/onboarding/data/data_model/level_data_model.dart';
+import 'package:offline_ai_tutor/features/onboarding/data/data_model/user_data_model.dart';
 
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
     registerAdapter(LanguageModelAdapter());
+    registerAdapter(LevelDataModelAdapter());
+    registerAdapter(UserDataModelAdapter());
   }
 }
 
 extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
     registerAdapter(LanguageModelAdapter());
+    registerAdapter(LevelDataModelAdapter());
+    registerAdapter(UserDataModelAdapter());
   }
 }

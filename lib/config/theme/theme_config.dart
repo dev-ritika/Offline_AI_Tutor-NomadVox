@@ -14,6 +14,7 @@ class ThemeConfig {
         seedColor: ColorConsts.primaryColor,
         surface: ColorConsts.backgroundColor,
       ),
+
       // primaryColor: ColorConsts.primaryColor,
       scaffoldBackgroundColor: ColorConsts.backgroundColor,
       primaryTextTheme: primaryTextTheme,

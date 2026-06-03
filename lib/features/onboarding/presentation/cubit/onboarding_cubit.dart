@@ -6,34 +6,58 @@ import 'package:offline_ai_tutor/core/use_case/no_params.dart';
 import 'package:offline_ai_tutor/core/utils/enums/state_enum.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/language.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/level.dart';
+import 'package:offline_ai_tutor/features/onboarding/domain/entities/user_data.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/get_languages.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/get_levels.dart';
+import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/save_user_data.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_state.dart';
-import 'package:offline_ai_tutor/features/onboarding/presentation/utils/onboarding_header_enum.dart';
 
 @injectable
 class OnboardingCubit extends Cubit<OnboardingState> {
   final GetLanguages getLanguages;
   final GetLevels getLevels;
-  OnboardingCubit({required this.getLanguages, required this.getLevels})
-    : super(const OnboardingState.initialState());
+  final SaveUserData saveUserData;
+  OnboardingCubit({
+    required this.saveUserData,
+    required this.getLanguages,
+    required this.getLevels,
+  }) : super(const OnboardingState()) {
+    loadLanguages();
+  }
 
-  void loadNextContent() async {
-    emit(state.copyWith(currentStep: state.currentStep.nextStep));
+  Future<void> submit() async {
+    emit(state.copyWith(status: StateStatusEnum.saving));
+
+    final UserData userData = UserData(
+      selectedLanguage: state.selectedLanguage!,
+      selectedLevel: state.selectedLevel!,
+      userName: state.enteredName ?? "",
+    );
+
+    final result = await saveUserData.call(userData);
+
+    result.fold(
+      (l) => emit(state.copyWith(status: StateStatusEnum.error)),
+      (r) => emit(state.copyWith(status: StateStatusEnum.saved)),
+    );
+  }
+
+  void goNext() async {
+    final next = state.currentStep.nextStep;
+    if (next == null) {
+      submit();
+      return;
+    }
+    // explicit no-op for last step
+    emit(state.copyWith(currentStep: next));
 
     switch (state.currentStep.currentStep) {
-      // case (1):
-      // emit(state.copyWith(currentStep: OnboardingStepEnum.language));
       case (2):
-        print("object 1");
         loadLevels();
-        emit(state.copyWith(currentStep: OnboardingStepEnum.level));
-      //  case (3):
-      //  emit(state.copyWith(currentStep: OnboardingStepEnum.name));
     }
   }
 
-  Future<void> onLanguagesLoads() async {
+  Future<void> loadLanguages() async {
     emit(state.copyWith(status: StateStatusEnum.loading));
 
     await Future.delayed(const Duration(seconds: 1));
@@ -68,16 +92,22 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   }
 
   void loadLevels() async {
-    print("object");
-    final Either<Failures, List<Level>> data = await getLevels();
+    final Either<Failures, List<Level>> data = await getLevels(
+      const NoParams(),
+    );
 
-    data.fold((l) {}, (list) {
-      emit(state.copyWith(levelsList: list));
-    });
+    data.fold(
+      (l) {
+        emit(state.copyWith(error: l));
+      },
+      (list) {
+        emit(state.copyWith(levelsList: list));
+      },
+    );
   }
 
   void selectLevel(Level? selectedLevel) {
-    bool alreadySelected = state.selectedLevel?.title == selectedLevel?.title;
+    bool alreadySelected = state.selectedLevel == selectedLevel;
 
     emit(
       state.copyWith(
@@ -88,29 +118,6 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   }
 
   void enterName(String? username) {
-    emit(state.copyWith(enteredName: username));
+    emit(state.copyWith(enteredName: username?.trim()));
   }
-
-  //  Future<void> _saveSelectedLanguage(
-  //   LanguageSaved event,
-  //   Emitter<LanguagesState> emit,
-  // ) async {
-  //   if (state.selectedLanguage == null) return;
-
-  //   emit(state.copyWith(status: StateStatusEnum.saving));
-
-  //   final Either<Failures, void> data = await saveLanguage.call(
-  //     state.selectedLanguage!,
-  //   );
-
-  //   data.fold(
-  //     (l) {
-  //       emit(state.copyWith(error: l, status: StateStatusEnum.error));
-  //     },
-  //     (r) {
-  //       //later code to add navigation
-  //       emit(state.copyWith(status: StateStatusEnum.saved));
-  //     },
-  //   );
-  // }
 }

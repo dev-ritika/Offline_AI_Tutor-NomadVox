@@ -27,42 +27,48 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     return BlocProvider(
       //TO DO ADD VIA DEPENDENCY INJECTION
-      create: (context) => sl<OnboardingCubit>()..onLanguagesLoads(),
+      create: (context) => sl<OnboardingCubit>(),
       // OnboardingCubit(getLanguages: sl(), getLevels: sl())
       //   ..onLanguagesLoads(),
       child: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: Stack(
           children: [
-            Scaffold(
-              body: SafeArea(
-                bottom: false,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 18,
-                    vertical: 25,
-                  ),
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            //header
-                            const OnboardingHeader(),
-                            //content
-                            Expanded(
-                              child: OnboardingContent(
-                                pageController: pageController,
+            PopScope(
+              canPop: false,
+              onPopInvokedWithResult: (didPop, result) {
+                print("object");
+              },
+              child: Scaffold(
+                body: SafeArea(
+                  bottom: false,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 18,
+                      vertical: 25,
+                    ),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              //header
+                              const OnboardingHeader(),
+                              //content
+                              Expanded(
+                                child: OnboardingContent(
+                                  pageController: pageController,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
 
-                      //button
-                      OnboardingAction(pageController: pageController),
-                    ],
+                        //button
+                        const OnboardingAction(),
+                      ],
+                    ),
                   ),
                 ),
               ),

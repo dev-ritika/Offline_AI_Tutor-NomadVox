@@ -18,9 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     _timer = Timer(const Duration(seconds: 2), () {
       if (!mounted) return;
-      Navigator.of(
-        context,
-      ).pushReplacementNamed(RoutesNames.selectLanguageScreen);
+      Navigator.of(context).pushReplacementNamed(RoutesNames.onboardingScreen);
     });
 
     super.initState();

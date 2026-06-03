@@ -35,5 +35,5 @@ enum OnboardingStepEnum {
   });
 
   OnboardingStepEnum? get nextStep =>
-      index + 1 > values.length ? null : values[index + 1];
+      index + 1 >= values.length ? null : values[index + 1];
 }
