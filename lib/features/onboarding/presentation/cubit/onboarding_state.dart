@@ -26,16 +26,6 @@ class OnboardingState extends Equatable {
     this.currentStep = OnboardingStepEnum.language,
   });
 
-  // const OnboardingState.initialState()
-  //   : currentStep = OnboardingStepEnum.language,
-  //     languagesList = const [],
-  //     levelsList = const [],
-  //     enteredName = '',
-  //     selectedLevel = null,
-  //     status = StateStatusEnum.empty,
-  //     error = null,
-  //     selectedLanguage = null;
-
   OnboardingState copyWith({
     Language? selectedLanguage,
     List<Language>? languagesList,
@@ -47,6 +37,7 @@ class OnboardingState extends Equatable {
     Failures? error,
     bool clearLanguageSelection = false,
     bool clearLevelSelection = false,
+    bool clearError = false,
   }) {
     return OnboardingState(
       enteredName: enteredName ?? this.enteredName,
@@ -54,7 +45,8 @@ class OnboardingState extends Equatable {
       currentStep: currentStep ?? this.currentStep,
       languagesList: languagesList ?? this.languagesList,
       status: status ?? this.status,
-      error: error ?? this.error,
+      error: clearError ? null : error ?? this.error,
+
       selectedLevel: clearLevelSelection
           ? null
           : selectedLevel ?? this.selectedLevel,

@@ -20,7 +20,9 @@ class OnboardingAction extends StatelessWidget {
       },
       builder: (context, state) {
         return PrimaryButton(
-          buttonText: "Continue",
+          buttonText: state.currentStepData.next == null
+              ? "Get Started"
+              : "Continue",
 
           onTap: !state.isEnabled
               ? null

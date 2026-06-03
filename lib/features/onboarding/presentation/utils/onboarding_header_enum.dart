@@ -34,6 +34,10 @@ enum OnboardingStepEnum {
     this.totalStep = 3,
   });
 
-  OnboardingStepEnum? get nextStep =>
+  OnboardingStepEnum? get next =>
       index + 1 >= values.length ? null : values[index + 1];
+
+  OnboardingStepEnum? get back {
+    return index - 1 < 0 ? null : values[index - 1];
+  }
 }

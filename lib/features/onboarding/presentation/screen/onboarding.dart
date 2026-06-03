@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offline_ai_tutor/core/dependency_injection/dependency_injection.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_cubit.dart';
+import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_state.dart';
+import 'package:offline_ai_tutor/features/onboarding/presentation/utils/onboarding_header_enum.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/widgets/onboarding_action.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/widgets/onboarding_content.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/widgets/onboarding_header.dart';
+import 'package:offline_ai_tutor/features/onboarding/presentation/widgets/onboarding_listeners.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/widgets/onboarding_loader.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -15,68 +18,77 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  PageController pageController = PageController();
+  final PageController _pageController = PageController();
 
   @override
   void dispose() {
-    pageController.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      //TO DO ADD VIA DEPENDENCY INJECTION
       create: (context) => sl<OnboardingCubit>(),
-      // OnboardingCubit(getLanguages: sl(), getLevels: sl())
-      //   ..onLanguagesLoads(),
       child: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: Stack(
-          children: [
-            PopScope(
-              canPop: false,
-              onPopInvokedWithResult: (didPop, result) {
-                print("object");
-              },
-              child: Scaffold(
-                body: SafeArea(
-                  bottom: false,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 18,
-                      vertical: 25,
-                    ),
-                    child: Column(
-                      children: [
-                        Expanded(
+        child: OnboardingListeners(
+          pageController: _pageController,
+          child: Stack(
+            children: [
+              BlocSelector<OnboardingCubit, OnboardingState, bool>(
+                selector: (state) {
+                  return state.currentStep == OnboardingStepEnum.language;
+                },
+                builder: (context, canBePopped) {
+                  return PopScope(
+                    canPop: canBePopped,
+                    onPopInvokedWithResult: (didPop, result) {
+                      if (didPop) return;
+                      context.read<OnboardingCubit>().goBack();
+                    },
+                    child: Scaffold(
+                      body: SafeArea(
+                        bottom: false,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 18,
+                            vertical: 25,
+                          ),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              //header
-                              const OnboardingHeader(),
-                              //content
                               Expanded(
-                                child: OnboardingContent(
-                                  pageController: pageController,
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    //header
+                                    const OnboardingHeader(),
+                                    //content
+                                    Expanded(
+                                      child: OnboardingContent(
+                                        pageController: _pageController,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
+
+                              //button
+                              const OnboardingAction(),
                             ],
                           ),
                         ),
-
-                        //button
-                        const OnboardingAction(),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
-            ),
 
-            //loader
-            const OnboardingLoader(),
-          ],
+              //loader
+              const OnboardingLoader(),
+            ],
+          ),
         ),
       ),
     );

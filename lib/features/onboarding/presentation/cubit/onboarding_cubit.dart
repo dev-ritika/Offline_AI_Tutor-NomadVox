@@ -23,6 +23,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     required this.getLevels,
   }) : super(const OnboardingState()) {
     loadLanguages();
+    loadLevels();
   }
 
   Future<void> submit() async {
@@ -42,19 +43,30 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     );
   }
 
-  void goNext() async {
-    final next = state.currentStep.nextStep;
+  void goNext() {
+    final next = state.currentStep.next;
+
     if (next == null) {
       submit();
       return;
     }
-    // explicit no-op for last step
-    emit(state.copyWith(currentStep: next));
 
-    switch (state.currentStep.currentStep) {
-      case (2):
-        loadLevels();
+    emit(state.copyWith(currentStep: next));
+  }
+
+  void goBack() {
+    final previous = state.currentStep.back;
+    if (previous == null) {
+      return;
     }
+
+    emit(
+      state.copyWith(
+        currentStep: previous,
+        status: StateStatusEnum.loaded,
+        clearError: true,
+      ),
+    );
   }
 
   Future<void> loadLanguages() async {
@@ -80,13 +92,10 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     bool isAlreadySelected =
         state.selectedLanguage?.langCode == selectedLanguage?.langCode;
 
-    print(isAlreadySelected);
-
     emit(
       state.copyWith(
         clearLanguageSelection: isAlreadySelected,
         selectedLanguage: selectedLanguage,
-        status: StateStatusEnum.loaded,
       ),
     );
   }
