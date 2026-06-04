@@ -20,6 +20,10 @@ class StringConsts {
   static const String enterNameTitle = "What should we call you?";
   static const String enterNameSubTitle = "Let's make this personal.";
 
+  static const String installModelsTitle = "Setting up your tutor";
+  static const String installModelsSubTitle =
+      "Downloading AI models once.\nAfter this, everything works offline.";
+
   //common
   static const String continueText = "Continue";
 }

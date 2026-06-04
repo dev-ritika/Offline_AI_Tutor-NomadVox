@@ -5,21 +5,28 @@ enum OnboardingStepEnum {
     title: StringConsts.selectLanguageTitle,
     subtitle: StringConsts.selectLanguageSubTitle,
     currentStep: 1,
-    totalStep: 3,
+    totalStep: 4,
   ),
 
   level(
     title: StringConsts.selectLevelTitle,
     subtitle: StringConsts.selectLevelSubTitle,
     currentStep: 2,
-    totalStep: 3,
+    totalStep: 4,
   ),
 
   name(
     title: StringConsts.enterNameTitle,
     subtitle: StringConsts.enterNameSubTitle,
     currentStep: 3,
-    totalStep: 3,
+    totalStep: 4,
+  ),
+
+  models(
+    title: StringConsts.installModelsTitle,
+    subtitle: StringConsts.installModelsSubTitle,
+    currentStep: 4,
+    totalStep: 4,
   );
 
   final String title;
@@ -31,7 +38,7 @@ enum OnboardingStepEnum {
     required this.title,
     required this.subtitle,
     required this.currentStep,
-    this.totalStep = 3,
+    this.totalStep = 4,
   });
 
   OnboardingStepEnum? get next =>

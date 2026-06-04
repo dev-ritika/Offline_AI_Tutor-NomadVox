@@ -3,7 +3,7 @@ import 'package:offline_ai_tutor/core/error_handling/failures.dart';
 import 'package:offline_ai_tutor/core/utils/enums/state_enum.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/language.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/level.dart';
-import 'package:offline_ai_tutor/features/onboarding/presentation/utils/onboarding_header_enum.dart';
+import 'package:offline_ai_tutor/features/onboarding/presentation/utils/enums/onboarding_header_enum.dart';
 
 class OnboardingState extends Equatable {
   final OnboardingStepEnum currentStep;
@@ -15,6 +15,8 @@ class OnboardingState extends Equatable {
   final StateStatusEnum status;
   final Failures? error;
 
+  final bool installedAllModels;
+
   const OnboardingState({
     this.selectedLanguage,
     this.languagesList,
@@ -24,6 +26,7 @@ class OnboardingState extends Equatable {
     this.status = StateStatusEnum.empty,
     this.error,
     this.currentStep = OnboardingStepEnum.language,
+    this.installedAllModels = false,
   });
 
   OnboardingState copyWith({
@@ -38,6 +41,7 @@ class OnboardingState extends Equatable {
     bool clearLanguageSelection = false,
     bool clearLevelSelection = false,
     bool clearError = false,
+    bool installedAllModels = false,
   }) {
     return OnboardingState(
       enteredName: enteredName ?? this.enteredName,
@@ -46,6 +50,8 @@ class OnboardingState extends Equatable {
       languagesList: languagesList ?? this.languagesList,
       status: status ?? this.status,
       error: clearError ? null : error ?? this.error,
+
+      installedAllModels: installedAllModels,
 
       selectedLevel: clearLevelSelection
           ? null
@@ -66,6 +72,7 @@ class OnboardingState extends Equatable {
     selectedLevel,
     levelsList,
     enteredName,
+    installedAllModels,
   ];
 
   bool get isLoading => status == StateStatusEnum.loading;
@@ -74,6 +81,7 @@ class OnboardingState extends Equatable {
     OnboardingStepEnum.language => selectedLanguage != null,
     OnboardingStepEnum.level => selectedLevel != null,
     OnboardingStepEnum.name => (enteredName?.length ?? 0) >= 2,
+    OnboardingStepEnum.models => installedAllModels,
     // _ => false,
   };
 }

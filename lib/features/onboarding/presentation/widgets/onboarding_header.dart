@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offline_ai_tutor/core/utils/constants/string_consts.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_cubit.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_state.dart';
-import 'package:offline_ai_tutor/features/onboarding/presentation/utils/onboarding_header_enum.dart';
+import 'package:offline_ai_tutor/features/onboarding/presentation/utils/enums/onboarding_header_enum.dart';
 
 class OnboardingHeader extends StatelessWidget {
   const OnboardingHeader({super.key});

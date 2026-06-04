@@ -4,6 +4,10 @@ class ColorConsts {
   ColorConsts._();
 
   static const Color primaryColor = Color(0xffA695FF);
+  static const Color primaryColor50 = Color(0x50A695FF);
+  static const Color primaryColor15 = Color(0x15A695FF);
+  static const Color primaryColor8 = Color(0x08A695FF);
+
   static const Color textPrimaryColor = Color(0xffF0EFF8);
 
   static const Color backgroundColor = Color(0xff0C0C14);
@@ -11,6 +15,15 @@ class ColorConsts {
   static const Color accentColor = Color(0xff4FC3A1);
 
   static const Color successColor = Color(0xff3DCF8E);
+  static const Color successColor50 = Color(0x503DCF8E);
+  static const Color successColor15 = Color(0x153DCF8E);
+  static const Color successColor8 = Color(0x083DCF8E);
+
+  static const Color disabledColor = Color(0xffD0CEE8);
+  static const Color disabledColor50 = Color(0x50D0CEE8);
+  static const Color disabledColor15 = Color(0x15D0CEE8);
+  static const Color disabledColor8 = Color(0x08D0CEE8);
+
   static const Color warningColor = Color(0xffF5A623);
   static const Color errorColor = Color(0xffFF5E5E);
 

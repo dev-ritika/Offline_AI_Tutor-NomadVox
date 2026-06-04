@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offline_ai_tutor/core/dependency_injection/dependency_injection.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_cubit.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_state.dart';
-import 'package:offline_ai_tutor/features/onboarding/presentation/utils/onboarding_header_enum.dart';
+import 'package:offline_ai_tutor/features/onboarding/presentation/utils/enums/onboarding_header_enum.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/widgets/onboarding_action.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/widgets/onboarding_content.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/widgets/onboarding_header.dart';

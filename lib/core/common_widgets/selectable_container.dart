@@ -1,35 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:offline_ai_tutor/core/common_widgets/select_icon.dart';
-import 'package:offline_ai_tutor/core/utils/constants/color_consts.dart';
+import 'package:offline_ai_tutor/core/utils/helpers/container_color_model.dart';
 
 class SelectableContainer extends StatelessWidget {
   final double? height;
   final double? width;
-  final Color? color1;
-  final Color? color2;
   final bool isSelected;
-  final Color? borderColor;
+  final ContainerColorModel containerColorModel;
   final Widget? leadingItem;
   final String title;
   final String subtitle;
-
-  // final Widget? middleItem;
   final Widget? trailingItem;
-  final VoidCallback onTap;
+  final Widget? bottemItem;
+  final VoidCallback? onTap;
 
   const SelectableContainer({
     super.key,
-    required this.onTap,
+    this.onTap,
+    this.containerColorModel = ContainerColorModel.containerColorModel,
     required this.title,
     required this.subtitle,
-    this.borderColor,
     this.height,
     this.width,
-    this.color1,
-    this.color2,
-    required this.isSelected,
+    this.isSelected = false,
     this.leadingItem,
-    //  this.middleItem,
+    this.bottemItem,
     this.trailingItem,
   });
 
@@ -49,53 +44,73 @@ class SelectableContainer extends StatelessWidget {
               style: BorderStyle.solid,
               width: 1.2,
 
-              color: borderColor ?? ColorConsts.buttonSecondaryStrokeColor,
+              color: containerColorModel.borderColor!,
             ),
             gradient: LinearGradient(
               colors: [
-                color1 ?? ColorConsts.buttonSecondaryColor,
-                color2 ?? ColorConsts.buttonSecondaryColor,
+                containerColorModel.gradientColor1 ??
+                    containerColorModel.containerColor!,
+                containerColorModel.gradientColor2 ??
+                    containerColorModel.containerColor!,
               ],
             ),
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-            child: Row(
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Column(
               children: [
-                if (leadingItem != null)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 30),
-                    child: leadingItem!,
-                  ),
+                Row(
+                  children: [
+                    if (leadingItem != null)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 30),
+                        child: CircleAvatar(
+                          radius: 20,
+                          backgroundColor: containerColorModel.avatarBgColor,
+                          child: leadingItem!,
+                        ),
+                      ),
 
-                Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        title,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.left,
-                        style: Theme.of(context).textTheme.titleSmall,
+                    Flexible(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            title,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.left,
+                            style: Theme.of(context).textTheme.titleSmall
+                                ?.copyWith(
+                                  color: containerColorModel.titleColor,
+                                ),
+                          ),
+                          Text(
+                            subtitle,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.left,
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
+                                  color: containerColorModel.subTitleColor,
+                                ),
+                          ),
+                        ],
                       ),
-                      Text(
-                        subtitle,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.left,
-                        style: Theme.of(context).textTheme.bodySmall,
+                    ),
+
+                    if (trailingItem != null) trailingItem!,
+
+                    if (isSelected)
+                      const Padding(
+                        padding: EdgeInsets.only(left: 15),
+                        child: SelectIcon(),
                       ),
-                    ],
-                  ),
+                  ],
                 ),
 
-                if (trailingItem != null) trailingItem!,
-
-                if (isSelected)
-                  const Padding(
-                    padding: EdgeInsets.only(left: 15),
-                    child: SelectIcon(),
-                  ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: bottemItem ?? const SizedBox.shrink(),
+                ),
               ],
             ),
           ),

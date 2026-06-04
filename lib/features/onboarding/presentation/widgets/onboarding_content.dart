@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/widgets/languages_buttons.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/widgets/level_buttons.dart';
+import 'package:offline_ai_tutor/features/onboarding/presentation/widgets/models_container.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/widgets/name_field.dart';
 
 class OnboardingContent extends StatelessWidget {
@@ -13,7 +14,12 @@ class OnboardingContent extends StatelessWidget {
       controller: pageController,
       physics: const NeverScrollableScrollPhysics(),
 
-      children: const [LanguagesButtons(), LevelButtons(), NameField()],
+      children: const [
+        LanguagesButtons(),
+        LevelButtons(),
+        NameField(),
+        ModelsContainer(),
+      ],
     );
   }
 }
