@@ -16,6 +16,7 @@ import 'package:hive_ce/hive_ce.dart' as _i1055;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:offline_ai_tutor/core/dependency_injection/register_module.dart'
     as _i989;
+import 'package:offline_ai_tutor/core/network/dio_client.dart' as _i536;
 import 'package:offline_ai_tutor/core/storage/hive/hive_boxes_module.dart'
     as _i998;
 import 'package:offline_ai_tutor/core/storage/hive/hive_initializer.dart'
@@ -28,19 +29,21 @@ import 'package:offline_ai_tutor/features/onboarding/data/data_sources/languages
     as _i718;
 import 'package:offline_ai_tutor/features/onboarding/data/data_sources/level_local_data_source.dart'
     as _i510;
+import 'package:offline_ai_tutor/features/onboarding/data/data_sources/llm_model_data_source.dart'
+    as _i132;
 import 'package:offline_ai_tutor/features/onboarding/data/data_sources/save_user_data_source.dart'
     as _i463;
 import 'package:offline_ai_tutor/features/onboarding/data/repositories/language_repo_impl.dart'
     as _i590;
-import 'package:offline_ai_tutor/features/onboarding/data/repositories/level_repository_impl.dart'
+import 'package:offline_ai_tutor/features/onboarding/data/repositories/level_repo_impl.dart'
     as _i990;
 import 'package:offline_ai_tutor/features/onboarding/data/repositories/save_user_data_repo_impl.dart'
     as _i974;
-import 'package:offline_ai_tutor/features/onboarding/domain/repositories/language_repo.dart'
+import 'package:offline_ai_tutor/features/onboarding/domain/repositories/language_repository.dart'
     as _i837;
 import 'package:offline_ai_tutor/features/onboarding/domain/repositories/level_repository.dart'
     as _i984;
-import 'package:offline_ai_tutor/features/onboarding/domain/repositories/save_user_data_repo.dart'
+import 'package:offline_ai_tutor/features/onboarding/domain/repositories/save_user_data_repository.dart'
     as _i386;
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/get_languages.dart'
     as _i925;
@@ -61,6 +64,7 @@ extension GetItInjectableX on _i174.GetIt {
     final registerModule = _$RegisterModule();
     final hiveBoxesModule = _$HiveBoxesModule();
     gh.lazySingleton<_i281.AssetBundle>(() => registerModule.assetBundle);
+    gh.lazySingleton<_i536.DioClient>(() => _i536.DioClient());
     gh.lazySingleton<_i718.LanguagesParser>(() => _i718.LanguagesParser());
     gh.lazySingleton<_i314.HiveInitializer>(() => _i314.HiveInitializerImpl());
     gh.lazySingleton<_i510.LevelLocalDataSource>(
@@ -75,7 +79,7 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i1055.Box<_i702.UserDataModel>>(instanceName: 'userPrefs'),
       ),
     );
-    gh.lazySingleton<_i386.SaveUserDataRepo>(
+    gh.lazySingleton<_i386.SaveUserDataRepository>(
       () => _i974.SaveUserDataRepoImpl(
         saveUserDataLocallyDataSource:
             gh<_i463.SaveUserDataLocallyDataSource>(),
@@ -88,10 +92,15 @@ extension GetItInjectableX on _i174.GetIt {
       ),
     );
     gh.lazySingleton<_i1042.SaveUserData>(
-      () => _i1042.SaveUserData(saveUserDataRepo: gh<_i386.SaveUserDataRepo>()),
+      () => _i1042.SaveUserData(
+        saveUserDataRepo: gh<_i386.SaveUserDataRepository>(),
+      ),
     );
     gh.lazySingleton<_i984.LevelRepository>(
-      () => _i990.LevelRepositoryImpl(gh<_i510.LevelLocalDataSource>()),
+      () => _i990.LevelRepoImpl(gh<_i510.LevelLocalDataSource>()),
+    );
+    gh.lazySingleton<_i132.LLMModelDataSource>(
+      () => _i132.LLMModelDataSourceImpl(dioClient: gh<_i536.DioClient>()),
     );
     gh.lazySingleton<_i837.LanguageRepository>(
       () => _i590.LanguageRepoImpl(

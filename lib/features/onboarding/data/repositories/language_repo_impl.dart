@@ -5,7 +5,7 @@ import 'package:offline_ai_tutor/core/error_handling/failures.dart';
 import 'package:offline_ai_tutor/features/onboarding/data/data_model/language_model.dart';
 import 'package:offline_ai_tutor/features/onboarding/data/data_sources/language_local_data_source.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/language.dart';
-import 'package:offline_ai_tutor/features/onboarding/domain/repositories/language_repo.dart';
+import 'package:offline_ai_tutor/features/onboarding/domain/repositories/language_repository.dart';
 
 @LazySingleton(as: LanguageRepository)
 class LanguageRepoImpl implements LanguageRepository {

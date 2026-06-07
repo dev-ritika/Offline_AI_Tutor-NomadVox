@@ -5,10 +5,10 @@ import 'package:offline_ai_tutor/core/error_handling/failures.dart';
 import 'package:offline_ai_tutor/features/onboarding/data/data_model/user_data_model.dart';
 import 'package:offline_ai_tutor/features/onboarding/data/data_sources/save_user_data_source.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/user_data.dart';
-import 'package:offline_ai_tutor/features/onboarding/domain/repositories/save_user_data_repo.dart';
+import 'package:offline_ai_tutor/features/onboarding/domain/repositories/save_user_data_repository.dart';
 
-@LazySingleton(as: SaveUserDataRepo)
-class SaveUserDataRepoImpl implements SaveUserDataRepo {
+@LazySingleton(as: SaveUserDataRepository)
+class SaveUserDataRepoImpl implements SaveUserDataRepository {
   final SaveUserDataLocallyDataSource saveUserDataLocallyDataSource;
 
   const SaveUserDataRepoImpl({required this.saveUserDataLocallyDataSource});

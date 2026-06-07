@@ -7,10 +7,10 @@ import 'package:offline_ai_tutor/features/onboarding/domain/entities/level.dart'
 import 'package:offline_ai_tutor/features/onboarding/domain/repositories/level_repository.dart';
 
 @LazySingleton(as: LevelRepository)
-class LevelRepositoryImpl implements LevelRepository {
+class LevelRepoImpl implements LevelRepository {
   final LevelLocalDataSource levelLocalDataSource;
 
-  LevelRepositoryImpl(this.levelLocalDataSource);
+  LevelRepoImpl(this.levelLocalDataSource);
 
   @override
   Future<Either<Failures, List<Level>>> getLevels() async {

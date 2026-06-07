@@ -15,3 +15,12 @@ class HiveDataException implements Exception {
   @override
   String toString() => message;
 }
+
+class NetworkException implements Exception {
+  final String message;
+
+  NetworkException({required this.message});
+
+  @override
+  String toString() => message;
+}

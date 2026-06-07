@@ -47,6 +47,8 @@ dependencies:
 
   hive_ce: ^2.19.3
   hive_ce_flutter: ^2.3.4
+  dio: ^5.9.2
+  pretty_dio_logger: ^1.4.0
 
 dev_dependencies:
   flutter_test:

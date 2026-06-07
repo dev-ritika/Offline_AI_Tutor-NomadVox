@@ -4,7 +4,7 @@ import 'package:offline_ai_tutor/core/error_handling/failures.dart';
 import 'package:offline_ai_tutor/core/use_case/no_params.dart';
 import 'package:offline_ai_tutor/core/use_case/usecase.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/language.dart';
-import 'package:offline_ai_tutor/features/onboarding/domain/repositories/language_repo.dart';
+import 'package:offline_ai_tutor/features/onboarding/domain/repositories/language_repository.dart';
 
 @lazySingleton
 class GetLanguages implements Usecase<List<Language>, NoParams> {
