@@ -1,35 +1,26 @@
 class LLMModelEntity {
   final List<Models> models;
-  final Voices voices;
 
-  const LLMModelEntity({required this.models, required this.voices});
+  const LLMModelEntity({required this.models});
 }
 
 class Models {
   final String id;
   final String type;
   final String displayName;
-  final String url;
+  final String subtitleDisplay;
+  final String? url;
   final int sizeBytes;
+  final List<VoiceModel>? voices;
 
   const Models({
     required this.id,
     required this.displayName,
+    required this.subtitleDisplay,
     required this.sizeBytes,
     required this.type,
     required this.url,
-  });
-}
-
-class Voices {
-  final String displayName;
-  final int sizeBytes;
-  final List<VoiceModel> voiceModel;
-
-  const Voices({
-    required this.displayName,
-    required this.sizeBytes,
-    required this.voiceModel,
+    required this.voices,
   });
 }
 

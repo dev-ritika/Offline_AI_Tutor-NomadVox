@@ -3,6 +3,7 @@ import 'package:offline_ai_tutor/core/error_handling/failures.dart';
 import 'package:offline_ai_tutor/core/utils/enums/state_enum.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/language.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/level.dart';
+import 'package:offline_ai_tutor/features/onboarding/domain/entities/llm_model.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/utils/enums/onboarding_header_enum.dart';
 
 class OnboardingState extends Equatable {
@@ -16,6 +17,7 @@ class OnboardingState extends Equatable {
   final Failures? error;
 
   final bool installedAllModels;
+  final LLMModelEntity? modelsData;
 
   const OnboardingState({
     this.selectedLanguage,
@@ -23,6 +25,7 @@ class OnboardingState extends Equatable {
     this.levelsList,
     this.selectedLevel,
     this.enteredName,
+    this.modelsData,
     this.status = StateStatusEnum.empty,
     this.error,
     this.currentStep = OnboardingStepEnum.language,
@@ -37,6 +40,7 @@ class OnboardingState extends Equatable {
     List<Level>? levelsList,
     String? enteredName,
     Level? selectedLevel,
+    LLMModelEntity? modelsDataa,
     Failures? error,
     bool clearLanguageSelection = false,
     bool clearLevelSelection = false,
@@ -51,6 +55,7 @@ class OnboardingState extends Equatable {
       status: status ?? this.status,
       error: clearError ? null : error ?? this.error,
 
+      modelsData: modelsDataa ?? modelsData,
       installedAllModels: installedAllModels,
 
       selectedLevel: clearLevelSelection
@@ -73,6 +78,7 @@ class OnboardingState extends Equatable {
     levelsList,
     enteredName,
     installedAllModels,
+    modelsData,
   ];
 
   bool get isLoading => status == StateStatusEnum.loading;

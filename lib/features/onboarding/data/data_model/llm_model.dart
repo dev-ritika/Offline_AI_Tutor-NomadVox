@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:offline_ai_tutor/features/onboarding/domain/entities/llm_model.dart';
+
 LlmModel llmModelFromJson(String str) => LlmModel.fromJson(json.decode(str));
 
 String llmModelToJson(LlmModel data) => json.encode(data.toJson());
@@ -7,93 +9,95 @@ String llmModelToJson(LlmModel data) => json.encode(data.toJson());
 class LlmModel {
   String version;
   List<Model> models;
-  Voices voices;
 
-  LlmModel({required this.version, required this.models, required this.voices});
+  LlmModel({required this.version, required this.models});
 
   factory LlmModel.fromJson(Map<String, dynamic> json) => LlmModel(
     version: json["version"],
     models: List<Model>.from(json["models"].map((x) => Model.fromJson(x))),
-    voices: Voices.fromJson(json["voices"]),
   );
 
   Map<String, dynamic> toJson() => {
     "version": version,
     "models": List<dynamic>.from(models.map((x) => x.toJson())),
-    "voices": voices.toJson(),
   };
+
+  LLMModelEntity toDomain() {
+    return LLMModelEntity(models: models.map((x) => x.toDomain()).toList());
+  }
 }
 
 class Model {
   String id;
   String type;
   String displayName;
+  String subtitleDisplay;
   int sizeBytes;
-  String url;
+  String? url;
+  List<Voices>? voices;
 
   Model({
     required this.id,
     required this.type,
+    required this.subtitleDisplay,
     required this.displayName,
     required this.sizeBytes,
     required this.url,
+    required this.voices,
   });
 
   factory Model.fromJson(Map<String, dynamic> json) => Model(
     id: json["id"],
     type: json["type"],
+    subtitleDisplay: json['subtitleDisplay'],
     displayName: json["displayName"],
     sizeBytes: json["sizeBytes"],
     url: json["url"],
+    voices: json["items"] == null
+        ? []
+        : List<Voices>.from(json["items"]!.map((x) => Voices.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
     "id": id,
     "type": type,
     "displayName": displayName,
+    "subtitleDisplay": subtitleDisplay,
     "sizeBytes": sizeBytes,
     "url": url,
+    "items": voices == null
+        ? []
+        : List<dynamic>.from(voices!.map((x) => x.toJson())),
   };
+
+  //TODO
+  Models toDomain() {
+    return Models(
+      id: id,
+      displayName: displayName,
+      sizeBytes: sizeBytes,
+      type: type,
+      url: url,
+      subtitleDisplay: subtitleDisplay,
+      voices: voices?.map((x) => x.toDomain()).toList(),
+    );
+  }
 }
 
 class Voices {
-  String displayName;
-  int sizeBytes;
-  List<Item> items;
-
-  Voices({
-    required this.displayName,
-    required this.sizeBytes,
-    required this.items,
-  });
-
-  factory Voices.fromJson(Map<String, dynamic> json) => Voices(
-    displayName: json["displayName"],
-    sizeBytes: json["sizeBytes"],
-    items: List<Item>.from(json["items"].map((x) => Item.fromJson(x))),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "displayName": displayName,
-    "sizeBytes": sizeBytes,
-    "items": List<dynamic>.from(items.map((x) => x.toJson())),
-  };
-}
-
-class Item {
   String id;
   String displayName;
   String onnx;
   String config;
 
-  Item({
+  Voices({
     required this.id,
     required this.displayName,
     required this.onnx,
     required this.config,
   });
 
-  factory Item.fromJson(Map<String, dynamic> json) => Item(
+  factory Voices.fromJson(Map<String, dynamic> json) => Voices(
     id: json["id"],
     displayName: json["displayName"],
     onnx: json["onnx"],
@@ -106,4 +110,13 @@ class Item {
     "onnx": onnx,
     "config": config,
   };
+
+  VoiceModel toDomain() {
+    return VoiceModel(
+      config: config,
+      displayName: displayName,
+      id: id,
+      onnx: onnx,
+    );
+  }
 }

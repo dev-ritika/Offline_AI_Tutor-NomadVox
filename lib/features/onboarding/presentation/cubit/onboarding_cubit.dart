@@ -9,6 +9,7 @@ import 'package:offline_ai_tutor/features/onboarding/domain/entities/level.dart'
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/user_data.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/get_languages.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/get_levels.dart';
+import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/get_models.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/save_user_data.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_state.dart';
 
@@ -17,13 +18,17 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   final GetLanguages getLanguages;
   final GetLevels getLevels;
   final SaveUserData saveUserData;
+  final GetModels getModels;
+
   OnboardingCubit({
     required this.saveUserData,
     required this.getLanguages,
     required this.getLevels,
+    required this.getModels,
   }) : super(const OnboardingState()) {
     loadLanguages();
     loadLevels();
+    fetchModels();
   }
 
   Future<void> submit() async {
@@ -128,5 +133,19 @@ class OnboardingCubit extends Cubit<OnboardingState> {
 
   void enterName(String? username) {
     emit(state.copyWith(enteredName: username?.trim()));
+  }
+
+  Future<void> fetchModels() async {
+    final data = await getModels.call(const NoParams());
+
+    data.fold((l) => state.copyWith(error: l, status: StateStatusEnum.error), (
+      r,
+    ) {
+      emit(state.copyWith(modelsDataa: r));
+
+      print("modelssssss ${state.modelsData}");
+      print(r.models.first.displayName);
+      print(r.models[2].displayName);
+    });
   }
 }

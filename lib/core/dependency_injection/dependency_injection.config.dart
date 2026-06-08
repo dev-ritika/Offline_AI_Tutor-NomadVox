@@ -36,19 +36,25 @@ import 'package:offline_ai_tutor/features/onboarding/data/data_sources/save_user
 import 'package:offline_ai_tutor/features/onboarding/data/repositories/language_repo_impl.dart'
     as _i590;
 import 'package:offline_ai_tutor/features/onboarding/data/repositories/level_repo_impl.dart'
-    as _i990;
+    as _i936;
+import 'package:offline_ai_tutor/features/onboarding/data/repositories/llm_model_repo_impl.dart'
+    as _i309;
 import 'package:offline_ai_tutor/features/onboarding/data/repositories/save_user_data_repo_impl.dart'
     as _i974;
 import 'package:offline_ai_tutor/features/onboarding/domain/repositories/language_repository.dart'
-    as _i837;
+    as _i394;
 import 'package:offline_ai_tutor/features/onboarding/domain/repositories/level_repository.dart'
     as _i984;
+import 'package:offline_ai_tutor/features/onboarding/domain/repositories/llm_model_repository.dart'
+    as _i333;
 import 'package:offline_ai_tutor/features/onboarding/domain/repositories/save_user_data_repository.dart'
-    as _i386;
+    as _i649;
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/get_languages.dart'
     as _i925;
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/get_levels.dart'
     as _i1031;
+import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/get_models.dart'
+    as _i818;
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/save_user_data.dart'
     as _i1042;
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_cubit.dart'
@@ -79,11 +85,19 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i1055.Box<_i702.UserDataModel>>(instanceName: 'userPrefs'),
       ),
     );
-    gh.lazySingleton<_i386.SaveUserDataRepository>(
+    gh.lazySingleton<_i649.SaveUserDataRepository>(
       () => _i974.SaveUserDataRepoImpl(
         saveUserDataLocallyDataSource:
             gh<_i463.SaveUserDataLocallyDataSource>(),
       ),
+    );
+    gh.lazySingleton<_i1042.SaveUserData>(
+      () => _i1042.SaveUserData(
+        saveUserDataRepo: gh<_i649.SaveUserDataRepository>(),
+      ),
+    );
+    gh.lazySingleton<_i984.LevelRepository>(
+      () => _i936.LevelRepoImpl(gh<_i510.LevelLocalDataSource>()),
     );
     gh.lazySingleton<_i547.LanguageLocalDataSource>(
       () => _i547.LanguageLocalDataSourceImpl(
@@ -91,18 +105,15 @@ extension GetItInjectableX on _i174.GetIt {
         languagesParser: gh<_i718.LanguagesParser>(),
       ),
     );
-    gh.lazySingleton<_i1042.SaveUserData>(
-      () => _i1042.SaveUserData(
-        saveUserDataRepo: gh<_i386.SaveUserDataRepository>(),
-      ),
-    );
-    gh.lazySingleton<_i984.LevelRepository>(
-      () => _i990.LevelRepoImpl(gh<_i510.LevelLocalDataSource>()),
-    );
     gh.lazySingleton<_i132.LLMModelDataSource>(
       () => _i132.LLMModelDataSourceImpl(dioClient: gh<_i536.DioClient>()),
     );
-    gh.lazySingleton<_i837.LanguageRepository>(
+    gh.lazySingleton<_i333.LlmModelRepository>(
+      () => _i309.LlmModelRepoImpl(
+        llmMModelDataSource: gh<_i132.LLMModelDataSource>(),
+      ),
+    );
+    gh.lazySingleton<_i394.LanguageRepository>(
       () => _i590.LanguageRepoImpl(
         languageDataSource: gh<_i547.LanguageLocalDataSource>(),
       ),
@@ -112,14 +123,18 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i925.GetLanguages>(
       () => _i925.GetLanguages(
-        languageRepository: gh<_i837.LanguageRepository>(),
+        languageRepository: gh<_i394.LanguageRepository>(),
       ),
+    );
+    gh.lazySingleton<_i818.GetModels>(
+      () => _i818.GetModels(llmModelRepository: gh<_i333.LlmModelRepository>()),
     );
     gh.factory<_i960.OnboardingCubit>(
       () => _i960.OnboardingCubit(
         saveUserData: gh<_i1042.SaveUserData>(),
         getLanguages: gh<_i925.GetLanguages>(),
         getLevels: gh<_i1031.GetLevels>(),
+        getModels: gh<_i818.GetModels>(),
       ),
     );
     return this;

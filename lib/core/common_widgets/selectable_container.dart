@@ -107,10 +107,11 @@ class SelectableContainer extends StatelessWidget {
                   ],
                 ),
 
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: bottemItem ?? const SizedBox.shrink(),
-                ),
+                if (bottemItem != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 15),
+                    child: bottemItem,
+                  ),
               ],
             ),
           ),
