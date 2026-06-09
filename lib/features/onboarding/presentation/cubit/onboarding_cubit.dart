@@ -1,7 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:offline_ai_tutor/core/dependency_injection/dependency_injection.dart';
 import 'package:offline_ai_tutor/core/error_handling/failures.dart';
+import 'package:offline_ai_tutor/core/network/dio_client.dart';
 import 'package:offline_ai_tutor/core/use_case/no_params.dart';
 import 'package:offline_ai_tutor/core/utils/enums/state_enum.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/language.dart';
@@ -142,10 +144,16 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       r,
     ) {
       emit(state.copyWith(modelsDataa: r));
-
-      print("modelssssss ${state.modelsData}");
-      print(r.models.first.displayName);
-      print(r.models[2].displayName);
     });
+  }
+
+  Future<void> downloadModel(String url) async {
+    final response = sl<DioClient>().downloadFile(url: url);
+
+    await for (var result in response) {
+      result.fold((l) => print(l.toString()), (r) {
+        print(r.download);
+      });
+    }
   }
 }

@@ -29,11 +29,11 @@ class ContainerColorModel {
     ModelInstallStatusEnum status,
   ) {
     switch (status) {
-      case (ModelInstallStatusEnum.yetToStart):
+      case (ModelInstallStatusEnum.Queued):
         return yetToStartColorModel;
-      case (ModelInstallStatusEnum.wip):
+      case (ModelInstallStatusEnum.Downloading):
         return wipColorModel;
-      case (ModelInstallStatusEnum.completed):
+      case (ModelInstallStatusEnum.Downloaded):
         return successColorModel;
     }
   }

@@ -1,1 +1,1 @@
-enum ModelInstallStatusEnum { yetToStart, wip, completed }
+enum ModelInstallStatusEnum { Queued, Downloading, Downloaded }

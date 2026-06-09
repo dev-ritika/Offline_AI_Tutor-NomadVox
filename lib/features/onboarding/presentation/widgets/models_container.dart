@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offline_ai_tutor/core/common_widgets/selectable_container.dart';
+import 'package:offline_ai_tutor/core/dependency_injection/dependency_injection.dart';
+import 'package:offline_ai_tutor/core/utils/helpers/sizebytes_converter.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/llm_model.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_cubit.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_state.dart';
@@ -21,9 +23,16 @@ class ModelsContainer extends StatelessWidget {
           separatorBuilder: (context, index) => const SizedBox(height: 20),
           itemCount: data?.models.length ?? 0,
           itemBuilder: (context, index) {
-            print(data?.models);
+            bool start = true;
+
+            if (start) {
+              start = false;
+              sl<OnboardingCubit>().downloadModel(data?.models.first.url ?? "");
+            }
+
             return SelectableContainer(
-              title: data?.models[index].displayName ?? "",
+              title:
+                  "${(data?.models[index].displayName)}  ·  ${SizebytesConverter.getSize(data?.models[index].sizeBytes ?? 0)}",
               subtitle: data?.models[index].subtitleDisplay ?? "",
               leadingItem: const CircleAvatar(
                 radius: 20,
@@ -33,7 +42,7 @@ class ModelsContainer extends StatelessWidget {
                 value: 0.8,
                 minHeight: 3,
                 color: ContainerColorModel.installationStatusColor(
-                  ModelInstallStatusEnum.completed,
+                  ModelInstallStatusEnum.Downloaded,
                 ).progressBgColor,
                 backgroundColor: Colors.grey,
                 borderRadius: const BorderRadius.all(Radius.circular(2)),
