@@ -31,7 +31,7 @@ class LanguagesButtons extends StatelessWidget {
               },
               title: listData!.langName,
               subtitle: "${listData.nativeName} | ${listData.speakers}",
-              leadingItem: CountryFlag.fromLanguageCode(
+              leadingIcon: CountryFlag.fromLanguageCode(
                 listData.langCode,
                 theme: const ImageTheme(
                   // shape: Circle(),

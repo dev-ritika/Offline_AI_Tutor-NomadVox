@@ -7,7 +7,7 @@ class SelectableContainer extends StatelessWidget {
   final double? width;
   final bool isSelected;
   final ContainerColorModel containerColorModel;
-  final Widget? leadingItem;
+  final Widget? leadingIcon;
   final String title;
   final String subtitle;
   final Widget? trailingItem;
@@ -23,7 +23,7 @@ class SelectableContainer extends StatelessWidget {
     this.height,
     this.width,
     this.isSelected = false,
-    this.leadingItem,
+    this.leadingIcon,
     this.bottemItem,
     this.trailingItem,
   });
@@ -61,13 +61,13 @@ class SelectableContainer extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    if (leadingItem != null)
+                    if (leadingIcon != null)
                       Padding(
-                        padding: const EdgeInsets.only(right: 30),
+                        padding: const EdgeInsets.only(right: 15),
                         child: CircleAvatar(
                           radius: 20,
                           backgroundColor: containerColorModel.avatarBgColor,
-                          child: leadingItem!,
+                          child: leadingIcon!,
                         ),
                       ),
 

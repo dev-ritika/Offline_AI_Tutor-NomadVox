@@ -1,19 +1,21 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:offline_ai_tutor/core/dependency_injection/dependency_injection.dart';
 import 'package:offline_ai_tutor/core/error_handling/failures.dart';
-import 'package:offline_ai_tutor/core/network/dio_client.dart';
 import 'package:offline_ai_tutor/core/use_case/no_params.dart';
 import 'package:offline_ai_tutor/core/utils/enums/state_enum.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/language.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/level.dart';
+import 'package:offline_ai_tutor/features/onboarding/domain/entities/llm_model.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/user_data.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/get_languages.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/get_levels.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/get_models.dart';
+import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/install_model.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/save_user_data.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_state.dart';
+import 'package:offline_ai_tutor/features/onboarding/presentation/utils/enums/model_install_status_enum.dart';
+import 'package:offline_ai_tutor/features/onboarding/presentation/utils/helper_classes/model_install_data.dart';
 
 @injectable
 class OnboardingCubit extends Cubit<OnboardingState> {
@@ -21,12 +23,14 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   final GetLevels getLevels;
   final SaveUserData saveUserData;
   final GetModels getModels;
+  final InstallModel installModel;
 
   OnboardingCubit({
     required this.saveUserData,
     required this.getLanguages,
     required this.getLevels,
     required this.getModels,
+    required this.installModel,
   }) : super(const OnboardingState()) {
     loadLanguages();
     loadLevels();
@@ -144,16 +148,83 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       r,
     ) {
       emit(state.copyWith(modelsDataa: r));
+
+      List<ModelInstallData> modelInstallData = [];
+      int index = 0;
+
+      for (var x in r.models) {
+        modelInstallData.add(
+          ModelInstallData(
+            id: x.id,
+            index: index,
+            installedPercentage: 0,
+            installedStatus: ModelInstallStatusEnum.Queued,
+            name: x.displayName,
+          ),
+        );
+        index++;
+      }
+
+      emit(state.copyWith(modelInstallData: modelInstallData));
+
+      print("abccccc ${state.modelsData?.models.first.displayName}");
+
+      print("abcccccddd ${state.modelInstallData?.first.name}");
     });
   }
 
-  Future<void> downloadModel(String url) async {
-    final response = sl<DioClient>().downloadFile(url: url);
+  int index = 0;
+  Future<void> downloadModel() async {
+    final Models downloadableModel = state.modelsData!.models[index];
+
+    print("whats the index $index");
+
+    print("whats the indexaa ${downloadableModel.displayName}");
+
+    String url = downloadableModel.url ?? "";
+
+    print("url called for ---- $url");
+
+    final response = installModel.call(url);
 
     await for (var result in response) {
       result.fold((l) => print(l.toString()), (r) {
-        print(r.download);
+        print("right called ${r.download}");
+
+        final ModelInstallData? installedModel = state.modelInstallData?[index]
+            .copyWith(
+              id: downloadableModel.url ?? "",
+              index: index,
+              installedPercentage: r.download,
+              installedStatus: r.download < 100
+                  ? ModelInstallStatusEnum.Downloading
+                  : ModelInstallStatusEnum.Downloaded,
+              name: downloadableModel.displayName,
+            );
+
+        final List<ModelInstallData>? currentList = [
+          ...state.modelInstallData!,
+        ];
+        currentList?[index] = installedModel!;
+
+        print("checkkkk ${installedModel?.installedPercentage}");
+
+        emit(state.copyWith(modelInstallData: [...currentList!]));
+
+        print(
+          "checkkkk state ${state.modelInstallData?[index].installedPercentage}",
+        );
       });
+    }
+
+    if (index < state.modelsData!.models.length &&
+        state.modelInstallData?[index].installedStatus ==
+            ModelInstallStatusEnum.Downloaded) {
+      print("now moving nexttt");
+      index++;
+      downloadModel();
+    } else {
+      state.copyWith(installedAllModels: true);
     }
   }
 }

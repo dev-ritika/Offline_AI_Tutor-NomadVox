@@ -23,6 +23,8 @@ import 'package:offline_ai_tutor/core/storage/hive/hive_initializer.dart'
     as _i314;
 import 'package:offline_ai_tutor/features/onboarding/data/data_model/user_data_model.dart'
     as _i702;
+import 'package:offline_ai_tutor/features/onboarding/data/data_sources/install_model_data_source.dart'
+    as _i627;
 import 'package:offline_ai_tutor/features/onboarding/data/data_sources/language_local_data_source.dart'
     as _i547;
 import 'package:offline_ai_tutor/features/onboarding/data/data_sources/languages_parser.dart'
@@ -33,6 +35,8 @@ import 'package:offline_ai_tutor/features/onboarding/data/data_sources/llm_model
     as _i132;
 import 'package:offline_ai_tutor/features/onboarding/data/data_sources/save_user_data_source.dart'
     as _i463;
+import 'package:offline_ai_tutor/features/onboarding/data/repositories/install_model_repo_impl.dart'
+    as _i325;
 import 'package:offline_ai_tutor/features/onboarding/data/repositories/language_repo_impl.dart'
     as _i590;
 import 'package:offline_ai_tutor/features/onboarding/data/repositories/level_repo_impl.dart'
@@ -41,6 +45,8 @@ import 'package:offline_ai_tutor/features/onboarding/data/repositories/llm_model
     as _i309;
 import 'package:offline_ai_tutor/features/onboarding/data/repositories/save_user_data_repo_impl.dart'
     as _i974;
+import 'package:offline_ai_tutor/features/onboarding/domain/repositories/install_model_repository.dart'
+    as _i550;
 import 'package:offline_ai_tutor/features/onboarding/domain/repositories/language_repository.dart'
     as _i394;
 import 'package:offline_ai_tutor/features/onboarding/domain/repositories/level_repository.dart'
@@ -55,6 +61,8 @@ import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/get_levels
     as _i1031;
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/get_models.dart'
     as _i818;
+import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/install_model.dart'
+    as _i132;
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/save_user_data.dart'
     as _i1042;
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_cubit.dart'
@@ -108,6 +116,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i132.LLMModelDataSource>(
       () => _i132.LLMModelDataSourceImpl(dioClient: gh<_i536.DioClient>()),
     );
+    gh.lazySingleton<_i627.InstallModelDataSource>(
+      () => _i627.InstallModelDataSourceImpl(dioClient: gh<_i536.DioClient>()),
+    );
     gh.lazySingleton<_i333.LlmModelRepository>(
       () => _i309.LlmModelRepoImpl(
         llmMModelDataSource: gh<_i132.LLMModelDataSource>(),
@@ -129,12 +140,23 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i818.GetModels>(
       () => _i818.GetModels(llmModelRepository: gh<_i333.LlmModelRepository>()),
     );
+    gh.lazySingleton<_i550.InstallModelRepository>(
+      () => _i325.InstallModelRepoImpl(
+        installModelDataSource: gh<_i627.InstallModelDataSource>(),
+      ),
+    );
+    gh.lazySingleton<_i132.InstallModel>(
+      () => _i132.InstallModel(
+        installModelRepository: gh<_i550.InstallModelRepository>(),
+      ),
+    );
     gh.factory<_i960.OnboardingCubit>(
       () => _i960.OnboardingCubit(
         saveUserData: gh<_i1042.SaveUserData>(),
         getLanguages: gh<_i925.GetLanguages>(),
         getLevels: gh<_i1031.GetLevels>(),
         getModels: gh<_i818.GetModels>(),
+        installModel: gh<_i132.InstallModel>(),
       ),
     );
     return this;

@@ -1,3 +1,5 @@
+import 'package:offline_ai_tutor/features/onboarding/presentation/utils/enums/model_install_status_enum.dart';
+
 class LLMModelEntity {
   final List<Models> models;
 
@@ -12,6 +14,7 @@ class Models {
   final String? url;
   final int sizeBytes;
   final List<VoiceModel>? voices;
+  final ModelInstallStatusEnum installationStatus;
 
   const Models({
     required this.id,
@@ -21,6 +24,7 @@ class Models {
     required this.type,
     required this.url,
     required this.voices,
+    this.installationStatus = ModelInstallStatusEnum.Queued,
   });
 }
 

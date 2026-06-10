@@ -5,6 +5,7 @@ import 'package:offline_ai_tutor/features/onboarding/domain/entities/language.da
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/level.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/llm_model.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/utils/enums/onboarding_header_enum.dart';
+import 'package:offline_ai_tutor/features/onboarding/presentation/utils/helper_classes/model_install_data.dart';
 
 class OnboardingState extends Equatable {
   final OnboardingStepEnum currentStep;
@@ -18,6 +19,7 @@ class OnboardingState extends Equatable {
 
   final bool installedAllModels;
   final LLMModelEntity? modelsData;
+  final List<ModelInstallData>? modelInstallData;
 
   const OnboardingState({
     this.selectedLanguage,
@@ -29,6 +31,7 @@ class OnboardingState extends Equatable {
     this.status = StateStatusEnum.empty,
     this.error,
     this.currentStep = OnboardingStepEnum.language,
+    this.modelInstallData,
     this.installedAllModels = false,
   });
 
@@ -46,6 +49,7 @@ class OnboardingState extends Equatable {
     bool clearLevelSelection = false,
     bool clearError = false,
     bool installedAllModels = false,
+    List<ModelInstallData>? modelInstallData,
   }) {
     return OnboardingState(
       enteredName: enteredName ?? this.enteredName,
@@ -64,6 +68,7 @@ class OnboardingState extends Equatable {
       selectedLanguage: clearLanguageSelection
           ? null
           : selectedLanguage ?? this.selectedLanguage,
+      modelInstallData: modelInstallData ?? this.modelInstallData,
     );
   }
 
@@ -79,6 +84,7 @@ class OnboardingState extends Equatable {
     enteredName,
     installedAllModels,
     modelsData,
+    modelInstallData,
   ];
 
   bool get isLoading => status == StateStatusEnum.loading;
