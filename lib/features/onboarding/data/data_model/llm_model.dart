@@ -7,8 +7,8 @@ LlmModel llmModelFromJson(String str) => LlmModel.fromJson(json.decode(str));
 String llmModelToJson(LlmModel data) => json.encode(data.toJson());
 
 class LlmModel {
-  String version;
-  List<Model> models;
+  final String version;
+  final List<Model> models;
 
   LlmModel({required this.version, required this.models});
 
@@ -28,13 +28,13 @@ class LlmModel {
 }
 
 class Model {
-  String id;
-  String type;
-  String displayName;
-  String subtitleDisplay;
-  int sizeBytes;
-  String? url;
-  List<Voices>? voices;
+  final String id;
+  final String type;
+  final String displayName;
+  final String subtitleDisplay;
+  final int sizeBytes;
+  final String? url;
+  final List<Voices>? voices;
 
   Model({
     required this.id,
@@ -85,16 +85,20 @@ class Model {
 }
 
 class Voices {
-  String id;
-  String displayName;
-  String onnx;
-  String config;
+  final String id;
+  final String displayName;
+  final int onnxSizeBytes;
+  final String onnx;
+  final int configSizeBytes;
+  final String config;
 
   Voices({
     required this.id,
     required this.displayName,
     required this.onnx,
     required this.config,
+    required this.onnxSizeBytes,
+    required this.configSizeBytes,
   });
 
   factory Voices.fromJson(Map<String, dynamic> json) => Voices(
@@ -102,6 +106,8 @@ class Voices {
     displayName: json["displayName"],
     onnx: json["onnx"],
     config: json["config"],
+    onnxSizeBytes: json["onnxSizeBytes"],
+    configSizeBytes: json["configSizeBytes"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -109,6 +115,8 @@ class Voices {
     "displayName": displayName,
     "onnx": onnx,
     "config": config,
+    "configSizeBytes": configSizeBytes,
+    "onnxSizeBytes": onnxSizeBytes,
   };
 
   VoiceModel toDomain() {
@@ -117,6 +125,8 @@ class Voices {
       displayName: displayName,
       id: id,
       onnx: onnx,
+      onnxSizeBytes: onnxSizeBytes,
+      configSizeBytes: configSizeBytes,
     );
   }
 }

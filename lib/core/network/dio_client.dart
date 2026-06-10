@@ -24,8 +24,8 @@ class DioClient {
         baseUrl: "https://dev-ritika.github.io/",
         contentType: Headers.jsonContentType,
         responseType: ResponseType.json,
-        connectTimeout: const Duration(microseconds: 0),
-        receiveTimeout: const Duration(microseconds: 0),
+        connectTimeout: const Duration(seconds: 15),
+        receiveTimeout: const Duration(seconds: 15),
       ),
     );
 

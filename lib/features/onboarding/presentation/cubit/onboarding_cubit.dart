@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
@@ -166,65 +168,105 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       }
 
       emit(state.copyWith(modelInstallData: modelInstallData));
-
-      print("abccccc ${state.modelsData?.models.first.displayName}");
-
-      print("abcccccddd ${state.modelInstallData?.first.name}");
     });
   }
 
   int index = 0;
+  int index2 = 0;
+  bool installedFirstFile = false;
+  int downloadPercentage = 0;
+
   Future<void> downloadModel() async {
     final Models downloadableModel = state.modelsData!.models[index];
+    late final String url;
 
-    print("whats the index $index");
-
-    print("whats the indexaa ${downloadableModel.displayName}");
-
-    String url = downloadableModel.url ?? "";
-
-    print("url called for ---- $url");
+    //changed
+    if (index == 1) {
+      if (!installedFirstFile) {
+        print("downloading first file");
+        url = downloadableModel.voices![index2].onnx;
+        installedFirstFile = true;
+      } else if (installedFirstFile) {
+        print("downloading second file");
+        url = downloadableModel.voices![index2].config;
+        installedFirstFile = false;
+      }
+    } else {
+      url = downloadableModel.url ?? "";
+    }
 
     final response = installModel.call(url);
 
     await for (var result in response) {
       result.fold((l) => print(l.toString()), (r) {
-        print("right called ${r.download}");
+        late final ModelInstallData? installedModel;
 
-        final ModelInstallData? installedModel = state.modelInstallData?[index]
-            .copyWith(
-              id: downloadableModel.url ?? "",
-              index: index,
-              installedPercentage: r.download,
-              installedStatus: r.download < 100
-                  ? ModelInstallStatusEnum.Downloading
-                  : ModelInstallStatusEnum.Downloaded,
-              name: downloadableModel.displayName,
-            );
+        //changed
+        if (index == 1) {
+          if (!installedFirstFile) {
+            downloadPercentage +=
+                (downloadableModel.voices![index2].onnxSizeBytes /
+                        state.modelsData!.models[index].sizeBytes *
+                        r.download)
+                    .round();
+          } else {
+            downloadPercentage +=
+                (downloadableModel.voices![index2].configSizeBytes /
+                        state.modelsData!.models[index].sizeBytes *
+                        r.download)
+                    .round();
+          }
 
-        final List<ModelInstallData>? currentList = [
-          ...state.modelInstallData!,
-        ];
-        currentList?[index] = installedModel!;
+          installedModel = state.modelInstallData?[index].copyWith(
+            id: downloadableModel.id,
+            index: index,
+            installedPercentage: downloadPercentage,
+            installedStatus: downloadPercentage <= 100
+                ? ModelInstallStatusEnum.Downloading
+                : ModelInstallStatusEnum.Downloaded,
+            name: downloadableModel.displayName,
+          );
+        } else {
+          installedModel = state.modelInstallData?[index].copyWith(
+            id: downloadableModel.id,
+            index: index,
+            installedPercentage: r.download,
+            installedStatus: r.download < 100
+                ? ModelInstallStatusEnum.Downloading
+                : ModelInstallStatusEnum.Downloaded,
+            name: downloadableModel.displayName,
+          );
+        }
 
-        print("checkkkk ${installedModel?.installedPercentage}");
+        final List<ModelInstallData> currentList = [...state.modelInstallData!];
+        currentList[index] = installedModel!;
 
-        emit(state.copyWith(modelInstallData: [...currentList!]));
-
-        print(
-          "checkkkk state ${state.modelInstallData?[index].installedPercentage}",
-        );
+        emit(state.copyWith(modelInstallData: [...currentList]));
       });
     }
 
-    if (index < state.modelsData!.models.length &&
+    //changed
+    if (index == 1) {
+      if (installedFirstFile) {
+        downloadModel();
+      } else {
+        if (index2 >= 4) {
+          print("am i here");
+          emit(state.copyWith(installedAllModels: true));
+
+          //index++;
+        } else {
+          print("or hereeee");
+          index2++;
+
+          downloadModel();
+        }
+      }
+    } else if (index < state.modelsData!.models.length &&
         state.modelInstallData?[index].installedStatus ==
             ModelInstallStatusEnum.Downloaded) {
-      print("now moving nexttt");
       index++;
       downloadModel();
-    } else {
-      state.copyWith(installedAllModels: true);
     }
   }
 }

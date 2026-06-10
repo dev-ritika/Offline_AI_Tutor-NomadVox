@@ -33,11 +33,16 @@ class VoiceModel {
   final String onnx;
   final String config;
   final String displayName;
+  final int onnxSizeBytes;
+
+  final int configSizeBytes;
 
   VoiceModel({
     required this.config,
     required this.displayName,
     required this.id,
     required this.onnx,
+    required this.onnxSizeBytes,
+    required this.configSizeBytes,
   });
 }
