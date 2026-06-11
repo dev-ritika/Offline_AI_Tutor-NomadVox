@@ -4,12 +4,14 @@ class SizebytesConverter {
     const mb = kb * 1024;
     const gb = mb * 1024;
 
-    if (sizeBytes > kb && sizeBytes <= mb) {
-      return "${(sizeBytes / kb).toStringAsFixed(1)} KB";
-    } else if (sizeBytes > mb && sizeBytes <= gb) {
-      return "${(sizeBytes / mb).toStringAsFixed(1)} MB";
-    } else {
+    if (sizeBytes >= gb) {
       return "${(sizeBytes / gb).toStringAsFixed(1)} GB";
+    } else if (sizeBytes >= mb) {
+      return "${(sizeBytes / mb).toStringAsFixed(1)} MB";
+    } else if (sizeBytes >= kb) {
+      return "${(sizeBytes / kb).toStringAsFixed(1)} KB";
+    } else {
+      return "$sizeBytes B";
     }
   }
 }

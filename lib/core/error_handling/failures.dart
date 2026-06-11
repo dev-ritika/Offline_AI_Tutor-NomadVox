@@ -1,7 +1,12 @@
-sealed class Failures {
+import 'package:equatable/equatable.dart';
+
+sealed class Failures extends Equatable {
   final String message;
 
   const Failures(this.message);
+
+  @override
+  List<Object?> get props => [message];
 }
 
 class CacheFailure extends Failures {

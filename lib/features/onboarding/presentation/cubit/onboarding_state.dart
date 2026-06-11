@@ -48,7 +48,7 @@ class OnboardingState extends Equatable {
     bool clearLanguageSelection = false,
     bool clearLevelSelection = false,
     bool clearError = false,
-    bool installedAllModels = false,
+    bool? installedAllModels,
     List<ModelInstallData>? modelInstallData,
   }) {
     return OnboardingState(
@@ -60,7 +60,7 @@ class OnboardingState extends Equatable {
       error: clearError ? null : error ?? this.error,
 
       modelsData: modelsDataa ?? modelsData,
-      installedAllModels: installedAllModels,
+      installedAllModels: installedAllModels ?? this.installedAllModels,
 
       selectedLevel: clearLevelSelection
           ? null
@@ -94,6 +94,5 @@ class OnboardingState extends Equatable {
     OnboardingStepEnum.level => selectedLevel != null,
     OnboardingStepEnum.name => (enteredName?.length ?? 0) >= 2,
     OnboardingStepEnum.models => installedAllModels,
-    // _ => false,
   };
 }

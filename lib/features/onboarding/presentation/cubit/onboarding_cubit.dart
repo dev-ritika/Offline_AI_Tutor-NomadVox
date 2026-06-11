@@ -1,10 +1,8 @@
 import 'dart:async';
-
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:offline_ai_tutor/core/error_handling/failures.dart';
-import 'package:offline_ai_tutor/core/use_case/no_params.dart';
 import 'package:offline_ai_tutor/core/utils/enums/state_enum.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/language.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/level.dart';
@@ -17,6 +15,7 @@ import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/install_mo
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/save_user_data.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_state.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/utils/enums/model_install_status_enum.dart';
+import 'package:offline_ai_tutor/features/onboarding/presentation/utils/enums/onboarding_header_enum.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/utils/helper_classes/model_install_data.dart';
 
 @injectable
@@ -56,8 +55,14 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     );
   }
 
+  bool installationStarted = false;
   void goNext() {
     final next = state.currentStep.next;
+
+    if (next == OnboardingStepEnum.models && !installationStarted) {
+      installationStarted = true;
+      downloadModel();
+    }
 
     if (next == null) {
       submit();
@@ -87,9 +92,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
 
     await Future.delayed(const Duration(seconds: 1));
 
-    final Either<Failures, List<Language>> data = await getLanguages(
-      const NoParams(),
-    );
+    final Either<Failures, List<Language>> data = await getLanguages();
 
     data.fold(
       (l) {
@@ -114,9 +117,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   }
 
   void loadLevels() async {
-    final Either<Failures, List<Level>> data = await getLevels(
-      const NoParams(),
-    );
+    final Either<Failures, List<Level>> data = await getLevels();
 
     data.fold(
       (l) {
@@ -144,52 +145,53 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   }
 
   Future<void> fetchModels() async {
-    final data = await getModels.call(const NoParams());
+    final data = await getModels.call();
 
-    data.fold((l) => state.copyWith(error: l, status: StateStatusEnum.error), (
-      r,
-    ) {
-      emit(state.copyWith(modelsDataa: r));
+    data.fold(
+      (l) => emit(state.copyWith(error: l, status: StateStatusEnum.error)),
+      (r) {
+        emit(state.copyWith(modelsDataa: r));
 
-      List<ModelInstallData> modelInstallData = [];
-      int index = 0;
+        List<ModelInstallData> modelInstallData = [];
+        int index = 0;
 
-      for (var x in r.models) {
-        modelInstallData.add(
-          ModelInstallData(
-            id: x.id,
-            index: index,
-            installedPercentage: 0,
-            installedStatus: ModelInstallStatusEnum.Queued,
-            name: x.displayName,
-          ),
-        );
-        index++;
-      }
+        for (var x in r.models) {
+          modelInstallData.add(
+            ModelInstallData(
+              id: x.id,
+              index: index,
+              installedPercentage: 0,
+              installedStatus: ModelInstallStatusEnum.Queued,
+              name: x.displayName,
+            ),
+          );
+          index++;
+        }
 
-      emit(state.copyWith(modelInstallData: modelInstallData));
-    });
+        emit(state.copyWith(modelInstallData: modelInstallData));
+      },
+    );
   }
 
   int index = 0;
-  int index2 = 0;
-  bool installedFirstFile = false;
-  int downloadPercentage = 0;
+  int voicesIndex = 0;
+  bool downloadingOnnx = true; // true = onnx file, false = config file
+  int completedBytes = 0; // bytes from files already finished (index == 1)
+  int totalBytes = 0; // sum of all onnx+config across the 5 voices
 
   Future<void> downloadModel() async {
     final Models downloadableModel = state.modelsData!.models[index];
     late final String url;
 
-    //changed
-    if (index == 1) {
-      if (!installedFirstFile) {
-        print("downloading first file");
-        url = downloadableModel.voices![index2].onnx;
-        installedFirstFile = true;
-      } else if (installedFirstFile) {
-        print("downloading second file");
-        url = downloadableModel.voices![index2].config;
-        installedFirstFile = false;
+    if (downloadableModel.id == "tts") {
+      totalBytes = state.modelsData!.models[index].sizeBytes;
+      final voice = downloadableModel.voices![voicesIndex];
+      if (downloadingOnnx) {
+        print("downloading onnx file (voice $voicesIndex)");
+        url = voice.onnx;
+      } else {
+        print("downloading config file (voice $voicesIndex)");
+        url = voice.config;
       }
     } else {
       url = downloadableModel.url ?? "";
@@ -197,68 +199,79 @@ class OnboardingCubit extends Cubit<OnboardingState> {
 
     final response = installModel.call(url);
 
-    await for (var result in response) {
-      result.fold((l) => print(l.toString()), (r) {
-        late final ModelInstallData? installedModel;
-
-        //changed
-        if (index == 1) {
-          if (!installedFirstFile) {
-            downloadPercentage +=
-                (downloadableModel.voices![index2].onnxSizeBytes /
-                        state.modelsData!.models[index].sizeBytes *
-                        r.download)
-                    .round();
-          } else {
-            downloadPercentage +=
-                (downloadableModel.voices![index2].configSizeBytes /
-                        state.modelsData!.models[index].sizeBytes *
-                        r.download)
-                    .round();
-          }
-
-          installedModel = state.modelInstallData?[index].copyWith(
-            id: downloadableModel.id,
-            index: index,
-            installedPercentage: downloadPercentage,
-            installedStatus: downloadPercentage <= 100
-                ? ModelInstallStatusEnum.Downloading
-                : ModelInstallStatusEnum.Downloaded,
-            name: downloadableModel.displayName,
-          );
-        } else {
-          installedModel = state.modelInstallData?[index].copyWith(
-            id: downloadableModel.id,
-            index: index,
-            installedPercentage: r.download,
-            installedStatus: r.download < 100
-                ? ModelInstallStatusEnum.Downloading
-                : ModelInstallStatusEnum.Downloaded,
-            name: downloadableModel.displayName,
-          );
-        }
-
-        final List<ModelInstallData> currentList = [...state.modelInstallData!];
-        currentList[index] = installedModel!;
-
-        emit(state.copyWith(modelInstallData: [...currentList]));
-      });
+    // size in bytes of the file currently downloading (index == 1 only)
+    int currentFileBytes = 0;
+    if (downloadableModel.id == "tts") {
+      final voice = downloadableModel.voices![voicesIndex];
+      currentFileBytes = downloadingOnnx
+          ? voice.onnxSizeBytes
+          : voice.configSizeBytes;
     }
 
-    //changed
-    if (index == 1) {
-      if (installedFirstFile) {
+    await for (var result in response) {
+      result.fold(
+        (l) {
+          emit(state.copyWith(error: l, status: StateStatusEnum.error));
+        },
+        (r) {
+          late final ModelInstallData? installedModel;
+
+          if (index == 1) {
+            // r.download is cumulative percent (0..100) of THIS file.
+            // overall = (bytes finished before + bytes finished now) / total
+            final int doneBytesNow =
+                completedBytes +
+                (currentFileBytes * (r.download / 100)).round();
+            final int percent = (doneBytesNow / totalBytes * 100)
+                .clamp(0, 100)
+                .round();
+
+            installedModel = state.modelInstallData?[index].copyWith(
+              id: downloadableModel.id,
+              index: index,
+              installedPercentage: percent,
+              installedStatus: percent < 100
+                  ? ModelInstallStatusEnum.Downloading
+                  : ModelInstallStatusEnum.Downloaded,
+              name: downloadableModel.displayName,
+            );
+          } else {
+            installedModel = state.modelInstallData?[index].copyWith(
+              id: downloadableModel.id,
+              index: index,
+              installedPercentage: r.download,
+              installedStatus: r.download < 100
+                  ? ModelInstallStatusEnum.Downloading
+                  : ModelInstallStatusEnum.Downloaded,
+              name: downloadableModel.displayName,
+            );
+          }
+
+          final List<ModelInstallData> currentList = [
+            ...state.modelInstallData!,
+          ];
+          currentList[index] = installedModel!;
+          emit(state.copyWith(modelInstallData: [...currentList]));
+        },
+      );
+    }
+
+    // current file finished -> bank its bytes so the next file continues from here
+    if (downloadableModel.id == "tts") {
+      completedBytes += currentFileBytes;
+
+      if (downloadingOnnx) {
+        // onnx done -> download config for the SAME voice
+        downloadingOnnx = false;
         downloadModel();
       } else {
-        if (index2 >= 4) {
-          print("am i here");
+        // config done -> this voice is fully finished
+        downloadingOnnx = true;
+        if (voicesIndex >= (downloadableModel.voices?.length ?? 0) - 1) {
           emit(state.copyWith(installedAllModels: true));
-
-          //index++;
+          // index++; // uncomment if you want to continue to the next model
         } else {
-          print("or hereeee");
-          index2++;
-
+          voicesIndex++;
           downloadModel();
         }
       }

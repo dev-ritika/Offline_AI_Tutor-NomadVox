@@ -22,21 +22,21 @@ class UserDataModel {
     required this.userName,
   });
 
-  factory UserDataModel.fromJson(Map<String, dynamic> json) {
-    return UserDataModel(
-      selectedLanguage: json["selectedLanguage"],
-      selectedLevel: json['selectedLevel'],
-      userName: json['userName'],
-    );
-  }
+  // factory UserDataModel.fromJson(Map<String, dynamic> json) {
+  //   return UserDataModel(
+  //     selectedLanguage: json["selectedLanguage"],
+  //     selectedLevel: json['selectedLevel'],
+  //     userName: json['userName'],
+  //   );
+  // }
 
-  Map<String, dynamic> toJson() {
-    return {
-      "selectedLanguage": selectedLanguage,
-      "selectedLevel": selectedLevel,
-      "userName": userName,
-    };
-  }
+  // Map<String, dynamic> toJson() {
+  //   return {
+  //     "selectedLanguage": selectedLanguage,
+  //     "selectedLevel": selectedLevel,
+  //     "userName": userName,
+  //   };
+  // }
 
   UserData toDomain() {
     return UserData(

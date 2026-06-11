@@ -10,7 +10,8 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 @lazySingleton
 class DioClient {
-  late Dio dio;
+  //Note for me - singleton pattern is not really required since registered as lazySingleton
+  late final Dio dio;
 
   static final DioClient _instance = DioClient._internal();
 

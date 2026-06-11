@@ -1,12 +1,16 @@
+import 'package:equatable/equatable.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/utils/enums/model_install_status_enum.dart';
 
-class LLMModelEntity {
+class LLMModelEntity extends Equatable {
   final List<Models> models;
 
   const LLMModelEntity({required this.models});
+
+  @override
+  List<Object?> get props => [models];
 }
 
-class Models {
+class Models extends Equatable {
   final String id;
   final String type;
   final String displayName;
@@ -14,7 +18,6 @@ class Models {
   final String? url;
   final int sizeBytes;
   final List<VoiceModel>? voices;
-  final ModelInstallStatusEnum installationStatus;
 
   const Models({
     required this.id,
@@ -24,11 +27,21 @@ class Models {
     required this.type,
     required this.url,
     required this.voices,
-    this.installationStatus = ModelInstallStatusEnum.Queued,
   });
+
+  @override
+  List<Object?> get props => [
+    id,
+    displayName,
+    subtitleDisplay,
+    sizeBytes,
+    type,
+    url,
+    voices,
+  ];
 }
 
-class VoiceModel {
+class VoiceModel extends Equatable {
   final String id;
   final String onnx;
   final String config;
@@ -37,7 +50,7 @@ class VoiceModel {
 
   final int configSizeBytes;
 
-  VoiceModel({
+  const VoiceModel({
     required this.config,
     required this.displayName,
     required this.id,
@@ -45,4 +58,14 @@ class VoiceModel {
     required this.onnxSizeBytes,
     required this.configSizeBytes,
   });
+
+  @override
+  List<Object?> get props => [
+    config,
+    displayName,
+    id,
+    onnx,
+    onnxSizeBytes,
+    configSizeBytes,
+  ];
 }
