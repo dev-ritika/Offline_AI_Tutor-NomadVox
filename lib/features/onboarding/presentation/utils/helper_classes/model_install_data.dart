@@ -3,15 +3,17 @@ import 'package:offline_ai_tutor/features/onboarding/presentation/utils/enums/mo
 
 class ModelInstallData extends Equatable {
   final String id;
-  // final int index;
+  final int sizeInBytes;
   final String name;
   final int installedPercentage;
+  final String url;
   final ModelInstallStatusEnum installedStatus;
 
   const ModelInstallData({
     required this.id,
-    // required this.index,
+    required this.sizeInBytes,
     required this.name,
+    required this.url,
     required this.installedPercentage,
     required this.installedStatus,
   });
@@ -19,24 +21,27 @@ class ModelInstallData extends Equatable {
   factory ModelInstallData.initial() {
     return const ModelInstallData(
       id: "",
-      //  index: 0,
+      sizeInBytes: 0,
       installedPercentage: 0,
       installedStatus: ModelInstallStatusEnum.Queued,
       name: "",
+      url: "",
     );
   }
 
   ModelInstallData copyWith({
     String? id,
-    int? index,
+    int? sizeInBytes,
     String? name,
+    String? url,
     int? installedPercentage,
     ModelInstallStatusEnum? installedStatus,
   }) {
     return ModelInstallData(
       id: id ?? this.id,
-      // index: index ?? this.index,
+      sizeInBytes: sizeInBytes ?? this.sizeInBytes,
       name: name ?? this.name,
+      url: url ?? this.url,
       installedPercentage: installedPercentage ?? this.installedPercentage,
       installedStatus: installedStatus ?? this.installedStatus,
     );
@@ -45,9 +50,10 @@ class ModelInstallData extends Equatable {
   @override
   List<Object?> get props => [
     id,
-    //index,
+    sizeInBytes,
     name,
     installedPercentage,
     installedStatus,
+    url,
   ];
 }

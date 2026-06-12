@@ -19,14 +19,18 @@ class OnboardingLoader extends StatelessWidget {
         isLoading: state.isLoading,
         isSaving: state.status == StateStatusEnum.saving,
       ),
-      builder: (context, data) => data.isLoading || data.isSaving
-          ? Container(
-              height: double.infinity,
-              width: double.infinity,
-              color: ColorConsts.blackOverlay,
-              child: const Center(child: CircularProgressIndicator()),
-            )
-          : const SizedBox.shrink(),
+      builder: (context, data) {
+        print("is loading ${data.isLoading}");
+
+        return data.isLoading || data.isSaving
+            ? Container(
+                height: double.infinity,
+                width: double.infinity,
+                color: ColorConsts.blackOverlay,
+                child: const Center(child: CircularProgressIndicator()),
+              )
+            : const SizedBox.shrink();
+      },
     );
   }
 }
