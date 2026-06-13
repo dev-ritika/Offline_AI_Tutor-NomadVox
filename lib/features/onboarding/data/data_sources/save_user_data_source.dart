@@ -21,10 +21,6 @@ class SaveUserDataLocallyDataSourceImpl
       await userPrefBox.put(HiveKeys.userDataKey, userData);
 
       final UserDataModel? data = userPrefBox.get(HiveKeys.userDataKey);
-
-      print(data?.selectedLanguage?.langName);
-      print(data?.selectedLevel?.title);
-      print(data?.userName);
     } catch (e) {
       throw HiveDataException(message: "Something went wrong");
     }

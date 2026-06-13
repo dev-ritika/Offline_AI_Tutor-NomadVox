@@ -13,6 +13,7 @@ import 'package:flutter/services.dart' as _i281;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:hive_ce/hive.dart' as _i738;
 import 'package:hive_ce/hive_ce.dart' as _i1055;
+import 'package:hive_ce_flutter/adapters.dart' as _i170;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:offline_ai_tutor/core/dependency_injection/register_module.dart'
     as _i989;
@@ -23,6 +24,8 @@ import 'package:offline_ai_tutor/core/storage/hive/hive_initializer.dart'
     as _i314;
 import 'package:offline_ai_tutor/features/onboarding/data/data_model/user_data_model.dart'
     as _i702;
+import 'package:offline_ai_tutor/features/onboarding/data/data_sources/get_model_install_status_source.dart'
+    as _i1028;
 import 'package:offline_ai_tutor/features/onboarding/data/data_sources/install_model_data_source.dart'
     as _i627;
 import 'package:offline_ai_tutor/features/onboarding/data/data_sources/language_local_data_source.dart'
@@ -33,8 +36,12 @@ import 'package:offline_ai_tutor/features/onboarding/data/data_sources/level_loc
     as _i510;
 import 'package:offline_ai_tutor/features/onboarding/data/data_sources/llm_model_data_source.dart'
     as _i132;
+import 'package:offline_ai_tutor/features/onboarding/data/data_sources/save_models_install_status_source.dart'
+    as _i713;
 import 'package:offline_ai_tutor/features/onboarding/data/data_sources/save_user_data_source.dart'
     as _i463;
+import 'package:offline_ai_tutor/features/onboarding/data/repositories/get_model_install_status_repo_impl.dart'
+    as _i862;
 import 'package:offline_ai_tutor/features/onboarding/data/repositories/install_model_repo_impl.dart'
     as _i325;
 import 'package:offline_ai_tutor/features/onboarding/data/repositories/language_repo_impl.dart'
@@ -43,8 +50,12 @@ import 'package:offline_ai_tutor/features/onboarding/data/repositories/level_rep
     as _i936;
 import 'package:offline_ai_tutor/features/onboarding/data/repositories/llm_model_repo_impl.dart'
     as _i309;
+import 'package:offline_ai_tutor/features/onboarding/data/repositories/save_model_install_status_repository_impl.dart'
+    as _i999;
 import 'package:offline_ai_tutor/features/onboarding/data/repositories/save_user_data_repo_impl.dart'
     as _i974;
+import 'package:offline_ai_tutor/features/onboarding/domain/repositories/get_model_install_status_repository.dart'
+    as _i546;
 import 'package:offline_ai_tutor/features/onboarding/domain/repositories/install_model_repository.dart'
     as _i550;
 import 'package:offline_ai_tutor/features/onboarding/domain/repositories/language_repository.dart'
@@ -53,16 +64,22 @@ import 'package:offline_ai_tutor/features/onboarding/domain/repositories/level_r
     as _i984;
 import 'package:offline_ai_tutor/features/onboarding/domain/repositories/llm_model_repository.dart'
     as _i333;
+import 'package:offline_ai_tutor/features/onboarding/domain/repositories/save_model_install_status_repository.dart'
+    as _i255;
 import 'package:offline_ai_tutor/features/onboarding/domain/repositories/save_user_data_repository.dart'
     as _i649;
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/get_languages.dart'
     as _i925;
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/get_levels.dart'
     as _i1031;
+import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/get_model_install_status.dart'
+    as _i196;
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/get_models.dart'
     as _i818;
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/install_model.dart'
     as _i132;
+import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/save_model_install_status.dart'
+    as _i247;
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/save_user_data.dart'
     as _i1042;
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_cubit.dart'
@@ -81,6 +98,10 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i536.DioClient>(() => _i536.DioClient());
     gh.lazySingleton<_i718.LanguagesParser>(() => _i718.LanguagesParser());
     gh.lazySingleton<_i314.HiveInitializer>(() => _i314.HiveInitializerImpl());
+    gh.lazySingleton<_i738.Box<List<dynamic>>>(
+      () => hiveBoxesModule.getModelsInstallBox,
+      instanceName: 'modelsInstall',
+    );
     gh.lazySingleton<_i510.LevelLocalDataSource>(
       () => const _i510.LevelLocalDataSourceImpl(),
     );
@@ -107,6 +128,13 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i984.LevelRepository>(
       () => _i936.LevelRepoImpl(gh<_i510.LevelLocalDataSource>()),
     );
+    gh.lazySingleton<_i713.SaveModelsInstallStatusSource>(
+      () => _i713.SaveModelsInstallStatusSourceImpl(
+        installStatusBox: gh<_i738.Box<List<dynamic>>>(
+          instanceName: 'modelsInstall',
+        ),
+      ),
+    );
     gh.lazySingleton<_i547.LanguageLocalDataSource>(
       () => _i547.LanguageLocalDataSourceImpl(
         rootBundle: gh<_i281.AssetBundle>(),
@@ -115,6 +143,13 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i132.LLMModelDataSource>(
       () => _i132.LLMModelDataSourceImpl(dioClient: gh<_i536.DioClient>()),
+    );
+    gh.lazySingleton<_i1028.GetModelInstallStatusSource>(
+      () => _i1028.GetModelInstallStatusSourceImpl(
+        installStatusBox: gh<_i170.Box<List<dynamic>>>(
+          instanceName: 'modelsInstall',
+        ),
+      ),
     );
     gh.lazySingleton<_i627.InstallModelDataSource>(
       () => _i627.InstallModelDataSourceImpl(dioClient: gh<_i536.DioClient>()),
@@ -129,16 +164,38 @@ extension GetItInjectableX on _i174.GetIt {
         languageDataSource: gh<_i547.LanguageLocalDataSource>(),
       ),
     );
+    gh.lazySingleton<_i255.SaveModelInstallStatusrepository>(
+      () => _i999.SaveModelInstallStatusRepositoryImpl(
+        saveModelsInstallStatusSource:
+            gh<_i713.SaveModelsInstallStatusSource>(),
+      ),
+    );
     gh.lazySingleton<_i1031.GetLevels>(
       () => _i1031.GetLevels(gh<_i984.LevelRepository>()),
+    );
+    gh.lazySingleton<_i546.GetModelInstallStatusRepository>(
+      () => _i862.GetModelInstallStatusRepoImpl(
+        getModelInstallStatusSource: gh<_i1028.GetModelInstallStatusSource>(),
+      ),
     );
     gh.lazySingleton<_i925.GetLanguages>(
       () => _i925.GetLanguages(
         languageRepository: gh<_i394.LanguageRepository>(),
       ),
     );
+    gh.lazySingleton<_i196.GetModelInstallStatus>(
+      () => _i196.GetModelInstallStatus(
+        getModelInstallStatusRepository:
+            gh<_i546.GetModelInstallStatusRepository>(),
+      ),
+    );
     gh.lazySingleton<_i818.GetModels>(
       () => _i818.GetModels(llmModelRepository: gh<_i333.LlmModelRepository>()),
+    );
+    gh.lazySingleton<_i247.SaveModelInstallStatus>(
+      () => _i247.SaveModelInstallStatus(
+        saveUserDataRepository: gh<_i255.SaveModelInstallStatusrepository>(),
+      ),
     );
     gh.lazySingleton<_i550.InstallModelRepository>(
       () => _i325.InstallModelRepoImpl(
@@ -157,6 +214,8 @@ extension GetItInjectableX on _i174.GetIt {
         getLevels: gh<_i1031.GetLevels>(),
         getModels: gh<_i818.GetModels>(),
         installModel: gh<_i132.InstallModel>(),
+        saveModelInstallStatus: gh<_i247.SaveModelInstallStatus>(),
+        getModelInstallStatus: gh<_i196.GetModelInstallStatus>(),
       ),
     );
     return this;

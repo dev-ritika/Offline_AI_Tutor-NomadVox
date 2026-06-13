@@ -20,8 +20,6 @@ class OnboardingLoader extends StatelessWidget {
         isSaving: state.status == StateStatusEnum.saving,
       ),
       builder: (context, data) {
-        print("is loading ${data.isLoading}");
-
         return data.isLoading || data.isSaving
             ? Container(
                 height: double.infinity,

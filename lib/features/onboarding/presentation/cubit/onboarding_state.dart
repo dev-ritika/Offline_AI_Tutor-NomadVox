@@ -5,7 +5,7 @@ import 'package:offline_ai_tutor/features/onboarding/domain/entities/language.da
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/level.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/llm_model.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/utils/enums/onboarding_header_enum.dart';
-import 'package:offline_ai_tutor/features/onboarding/presentation/utils/helper_classes/model_install_data.dart';
+import 'package:offline_ai_tutor/features/onboarding/domain/entities/model_install_data.dart';
 
 class OnboardingState extends Equatable {
   final OnboardingStepEnum currentStep;

@@ -11,7 +11,8 @@ import 'package:offline_ai_tutor/features/onboarding/presentation/widgets/onboar
 import 'package:offline_ai_tutor/features/onboarding/presentation/widgets/onboarding_loader.dart';
 
 class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({super.key});
+  final OnboardingCubit onboardingCubit;
+  const OnboardingScreen({super.key, required this.onboardingCubit});
 
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
@@ -28,8 +29,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<OnboardingCubit>(),
+    return BlocProvider.value(
+      value: widget.onboardingCubit,
+      //create: (context) => sl<OnboardingCubit>(),
       child: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: OnboardingListeners(

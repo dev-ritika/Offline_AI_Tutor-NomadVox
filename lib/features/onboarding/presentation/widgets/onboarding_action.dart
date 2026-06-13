@@ -19,8 +19,6 @@ class OnboardingAction extends StatelessWidget {
         return (currentStepData: state.currentStep, isEnabled: state.isEnabled);
       },
       builder: (context, state) {
-        print("am i enabed" + state.isEnabled.toString());
-
         return PrimaryButton(
           buttonText: state.currentStepData.next == null
               ? "Get Started"

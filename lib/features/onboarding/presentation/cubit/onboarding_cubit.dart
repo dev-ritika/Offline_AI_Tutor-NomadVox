@@ -9,13 +9,15 @@ import 'package:offline_ai_tutor/features/onboarding/domain/entities/level.dart'
 import 'package:offline_ai_tutor/features/onboarding/domain/entities/user_data.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/get_languages.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/get_levels.dart';
+import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/get_model_install_status.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/get_models.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/install_model.dart';
+import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/save_model_install_status.dart';
 import 'package:offline_ai_tutor/features/onboarding/domain/use_cases/save_user_data.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/cubit/onboarding_state.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/utils/enums/model_install_status_enum.dart';
 import 'package:offline_ai_tutor/features/onboarding/presentation/utils/enums/onboarding_header_enum.dart';
-import 'package:offline_ai_tutor/features/onboarding/presentation/utils/helper_classes/model_install_data.dart';
+import 'package:offline_ai_tutor/features/onboarding/domain/entities/model_install_data.dart';
 
 @injectable
 class OnboardingCubit extends Cubit<OnboardingState> {
@@ -24,6 +26,8 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   final SaveUserData saveUserData;
   final GetModels getModels;
   final InstallModel installModel;
+  final SaveModelInstallStatus saveModelInstallStatus;
+  final GetModelInstallStatus getModelInstallStatus;
 
   OnboardingCubit({
     required this.saveUserData,
@@ -31,6 +35,8 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     required this.getLevels,
     required this.getModels,
     required this.installModel,
+    required this.saveModelInstallStatus,
+    required this.getModelInstallStatus,
   }) : super(const OnboardingState()) {
     loadLanguages();
   }
@@ -160,47 +166,49 @@ class OnboardingCubit extends Cubit<OnboardingState> {
 
         List<ModelInstallData> modelInstallData = [];
 
-        //flattening model
-        for (var x in r.models) {
-          if (x.voices?.isNotEmpty ?? false) {
-            for (var v in x.voices!) {
-              modelInstallData.add(
-                ModelInstallData(
-                  id: x.id,
-                  installedPercentage: 0,
-                  installedStatus: ModelInstallStatusEnum.Queued,
-                  sizeInBytes: v.onnxSizeBytes,
-                  name: v.displayName,
-                  url: v.onnx,
-                ),
-              );
+        //initial case - when nothing is loaded from local data
+        if (state.modelInstallData?.isEmpty ?? true) {
+          for (var x in r.models) {
+            if (x.voices?.isNotEmpty ?? false) {
+              for (var v in x.voices!) {
+                modelInstallData.add(
+                  ModelInstallData(
+                    id: x.id,
+                    installedPercentage: 0,
+                    installedStatus: ModelInstallStatusEnum.Queued,
+                    sizeInBytes: v.onnxSizeBytes,
+                    name: v.displayName,
+                    url: v.onnx,
+                  ),
+                );
 
+                modelInstallData.add(
+                  ModelInstallData(
+                    id: x.id,
+                    installedPercentage: 0,
+                    installedStatus: ModelInstallStatusEnum.Queued,
+                    sizeInBytes: v.configSizeBytes,
+                    name: v.displayName,
+                    url: v.config,
+                  ),
+                );
+              }
+            } else {
               modelInstallData.add(
                 ModelInstallData(
                   id: x.id,
                   installedPercentage: 0,
+                  sizeInBytes: x.sizeBytes,
+                  url: x.url ?? "",
                   installedStatus: ModelInstallStatusEnum.Queued,
-                  sizeInBytes: v.configSizeBytes,
-                  name: v.displayName,
-                  url: v.config,
+                  name: x.displayName,
                 ),
               );
             }
-          } else {
-            modelInstallData.add(
-              ModelInstallData(
-                id: x.id,
-                installedPercentage: 0,
-                sizeInBytes: x.sizeBytes,
-                url: x.url ?? "",
-                installedStatus: ModelInstallStatusEnum.Queued,
-                name: x.displayName,
-              ),
-            );
           }
-        }
 
-        emit(state.copyWith(modelInstallData: modelInstallData));
+          emit(state.copyWith(modelInstallData: modelInstallData));
+        }
       },
     );
   }
@@ -226,53 +234,118 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     final List<ModelInstallData> uiModels = [];
     for (final m in downloadableModels) {
       if (uiModels.any((e) => e.id == m.id)) continue; // skip duplicates
+
       uiModels.add(
         m.copyWith(
           sizeInBytes: totalBytes[m.id]!,
           installedPercentage: 0,
-          installedStatus: ModelInstallStatusEnum.Queued,
+          installedStatus: m.installedStatus,
         ),
       );
     }
     emit(state.copyWith(modelInstallData: [...uiModels]));
 
+    int index = 0;
+    int localIndex = 0;
+
     // download each file
     for (final model in downloadableModels) {
-      bool isError = false;
+      if (model.installedStatus != ModelInstallStatusEnum.Downloaded) {
+        bool isError = false;
 
-      await for (final result in installModel.call(model.url)) {
-        result.fold(
-          (l) {
-            isError = true;
-            emit(state.copyWith(error: l, status: StateStatusEnum.error));
-          },
-          (r) {
-            // bytes done for THIS model = finished files + current file's progress
-            final received =
-                receivedBytes[model.id]! +
-                (model.sizeInBytes * (r.download / 100)).round();
+        await for (final result in installModel.call(model.url)) {
+          result.fold(
+            (l) {
+              isError = true;
+              emit(state.copyWith(error: l, status: StateStatusEnum.error));
+            },
+            (r) {
+              // bytes done for THIS model = finished files + current file's progress
+              final received =
+                  receivedBytes[model.id]! +
+                  (model.sizeInBytes * (r.download / 100)).round();
 
-            final percent = (received / totalBytes[model.id]! * 100)
-                .clamp(0, 100)
-                .round();
+              final percent = (received / totalBytes[model.id]! * 100)
+                  .clamp(0, 100)
+                  .round();
 
-            final index = uiModels.indexWhere((e) => e.id == model.id);
-            uiModels[index] = uiModels[index].copyWith(
-              installedPercentage: percent,
-              installedStatus: percent < 100
-                  ? ModelInstallStatusEnum.Downloading
-                  : ModelInstallStatusEnum.Downloaded,
-            );
+              index = uiModels.indexWhere((e) => e.id == model.id);
+              localIndex = downloadableModels.indexWhere(
+                (e) => e.url == model.url,
+              );
+              uiModels[index] = uiModels[index].copyWith(
+                installedPercentage: percent,
+                installedStatus: percent < 100
+                    ? ModelInstallStatusEnum.Downloading
+                    : ModelInstallStatusEnum.Downloaded,
+              );
 
-            emit(state.copyWith(modelInstallData: [...uiModels]));
-          },
+              emit(state.copyWith(modelInstallData: [...uiModels]));
+            },
+          );
+        }
+
+        if (isError) break; // stop BEFORE banking bytes
+
+        // file finished -> add its bytes to that model's running total
+        receivedBytes[model.id] = receivedBytes[model.id]! + model.sizeInBytes;
+
+        //updating to keep in local
+        //working fine for first model but how to handle for voices
+        // i want if even one of the voices is not downloaded - then perc for all should be 0
+        // i want if even all of the voices are downloaded - then perc for all should be 100
+
+        ///trial with localIndex
+        downloadableModels[localIndex] = downloadableModels[index].copyWith(
+          installedPercentage: 100,
+          installedStatus: ModelInstallStatusEnum.Downloaded,
+        );
+
+        print("is it updated $downloadableModels");
+
+        final Either<Failures, bool> data = await saveModelInstallStatus.call(
+          downloadableModels,
+        );
+
+        data.fold(
+          (l) => emit(state.copyWith(status: StateStatusEnum.error, error: l)),
+          (r) => emit(
+            state.copyWith(status: StateStatusEnum.saved, clearError: true),
+          ),
         );
       }
-
-      if (isError) break; // stop BEFORE banking bytes
-
-      // file finished -> add its bytes to that model's running total
-      receivedBytes[model.id] = receivedBytes[model.id]! + model.sizeInBytes;
     }
+    emit(state.copyWith(installedAllModels: true));
+  }
+
+  bool updateInstallStatus() {
+    final Either<Failures, List<ModelInstallData>> data = getModelInstallStatus
+        .call();
+
+    return data.fold(
+      (l) {
+        emit(state.copyWith(error: l, status: StateStatusEnum.error));
+        return false;
+      },
+      (r) {
+        if (r.isEmpty) {
+          return false;
+        }
+
+        print("what is in local $r");
+
+        late bool allModelsInstalled;
+
+        for (var x in r) {
+          if (x.installedPercentage < 100) {
+            allModelsInstalled = false;
+          }
+        }
+
+        emit(state.copyWith(modelInstallData: r, installedAllModels: false));
+
+        return allModelsInstalled;
+      },
+    );
   }
 }
